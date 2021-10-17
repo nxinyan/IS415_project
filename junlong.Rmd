@@ -1,0 +1,15 @@
+---
+title: "Toh Jun Long"
+image: "profile_images/junlong_profile.jpg"
+links:
+  - label: LinkedIn
+    url: "https://www.linkedin.com/in/tohjunlong/"
+  - label: GitHub
+    url: "https://github.com/JunLonggggg"
+  - label: Email
+    url: "mailto:email@email.com"
+output:
+  postcards::jolla
+---
+ 
+I am currently a year 3 SMU student majoring in Information Systems, with a track in Business Analytics and a 2nd track in Cybersecurity under the Computer Science Major.
