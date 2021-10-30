@@ -1,0 +1,97 @@
+---
+title: "Project"
+description: |
+  This is our group's project page for the topic on Geographically Weighted Regression
+author:
+  - name: Team 5 
+    url: ...
+    affiliation: Singapore Management University
+    affiliation_url: https://www.smu.edu.sg
+date: "`r Sys.Date()`"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+packages = c('sf', 'tidyverse', 'readxl', 'tmap', 'raster')
+for (p in packages){
+  if(!require(p, character.only = T)){
+    install.packages(p)
+  }
+  library(p,character.only = T)
+}
+```
+
+Population Counts (Unconstrained 2020, 100m resolution)
+
+```{r}
+library(raster)
+str_name<-'data/population/idn_ppp_2020_1km_Aggregated.tif'
+
+population2020_raster = raster(str_name)
+```
+
+```{r}
+tmap_mode("view")
+tm_shape(population2020_raster) + 
+  tm_raster(palette = "Paired", alpha = 0.7) +
+  tm_basemap("OpenStreetMap")
+tmap_mode("plot")
+```
+
+
+Total Density 2020 Unconstrained, Unadjusted, 1km
+
+```{r}
+library(raster)
+str_name<-'data/population/idn_pd_2020_1km.tif'
+
+populationden2020_raster = raster(str_name)
+```
+
+```{r}
+tmap_mode("view")
+tm_shape(populationden2020_raster) + 
+  tm_raster(palette = "Paired", alpha = 0.7) +
+  tm_basemap("OpenStreetMap")
+tmap_mode("plot")
+```
+
+Birth 2015 
+
+```{r}
+library(raster)
+str_name<-'data/birth/IDN_births_pp_v2_2015.tif'
+
+birth_raster = raster(str_name)
+```
+
+```{r}
+tmap_mode("view")
+tm_shape(birth_raster) + 
+  tm_raster(palette = "Paired", alpha = 0.7) +
+  tm_basemap("OpenStreetMap")
+tmap_mode("plot")
+```
+
+Railway Lines
+
+```{r}
+railwaysline_sf = st_read(dsn = "data/railways", layer = "hotosm_idn_jakarta_railways_lines")
+
+uniquerail <- unique(railwaysline_sf$name) 
+
+railredu <- railwaysline_sf[!duplicated(railwaysline_sf$name), ]
+railredu
+```
+
+```{r}
+tmap_mode("view")
+tm_shape(railredu) + 
+  tm_dots() +
+  tm_basemap("OpenStreetMap")
+tmap_mode("plot")
+```
