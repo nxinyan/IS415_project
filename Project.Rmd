@@ -12,7 +12,7 @@ output: distill::distill_article
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, eval = FALSE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## 1. Installing the necessary packages
@@ -116,10 +116,7 @@ unique_column_data_idkel <- function(data) {
 LOAD ID KEL DATA
 
 ```{r}
-mar20 <- unique_column_data_idkel("data/aspatial/Standar Kelurahan Data Corona (31 March 2020 Pukul 08.00).xlsx")
-apr20 <- unique_column_data_idkel("data/aspatial/Standar Kelurahan Data Corona (30 April 2020 Pukul 09.00).xlsx")
-may20 <- unique_column_data_idkel("data/aspatial/Standar Kelurahan Data Corona (31 May 2020 Pukul 09.00).xlsx")
-jun20 <- unique_column_data_idkel("data/aspatial/Standar Kelurahan Data Corona (30 June 2020 Pukul 09.00).xlsx")
+oct21 <- unique_column_data_idkel("data/aspatial/Standar Kelurahan Data Corona (31 October 2021 Pukul 10.00).xlsx")
 ```
 
 Meninggal function
@@ -130,12 +127,12 @@ unique_column_data_meninggal <- function(data) {
 
   names(thedata) <- make.unique(names(thedata))
   
-  data_withmonyear <- thedata %>%
-    mutate(thedata, Month = str_sub(data, 49, 51)) %>%
-    mutate(thedata, Year = str_sub(data, -22, -19)) %>%
-    mutate(thedata, Month_Year = paste(str_sub(data, 49, 51), str_sub(data, -22, -19), sep = "_", collapse = NULL))
+  # data_withmonyear <- thedata %>%
+  #   mutate(thedata, Month = str_sub(data, 49, 51)) %>%
+  #   mutate(thedata, Year = str_sub(data, -22, -19)) %>%
+  #   mutate(thedata, Month_Year = paste(str_sub(data, 49, 51), str_sub(data, -22, -19), sep = "_", collapse = NULL))
   
-  extracted_data <- dplyr::select(data_withmonyear, `ID_KEL`, `Nama_provinsi`, `nama_kota`, `nama_kecamatan`, `nama_kelurahan`, `POSITIF`, `Meninggal.1`, `Month`, `Year`, `Month_Year`) %>%
+  extracted_data <- dplyr::select(thedata, `ID_KEL`, `Nama_provinsi`, `nama_kota`, `nama_kecamatan`, `nama_kelurahan`, `POSITIF`, `Meninggal.1`) %>%
     rename(`Meninggal` = `Meninggal.1`) %>%
     drop_na()
     
@@ -146,36 +143,29 @@ unique_column_data_meninggal <- function(data) {
 LOAD MENINGGAL DATA
 
 ```{r}
-jul20 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (31 July 2020 Pukul 09.00).xlsx")
-aug20 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (31 August 2020 Pukul 10.00).xlsx")
-sep20 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (30 September 2020 Pukul 10.00).xlsx")
-oct20 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (31 October 2020 Pukul 10.00).xlsx")
-nov20 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (30 November 2020 Pukul 10.00).xlsx")
-dec20 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (31 December 2020 Pukul 10.00).xlsx")
-jan21 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (30 January 2021 Pukul 10.00).xlsx")
-feb21 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (28 February 2021 Pukul 10.00).xlsx")
-mar21 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (31 March 2021 Pukul 10.00).xlsx")
-apr21 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (30 April 2021 Pukul 10.00).xlsx")
-may21 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (31 May 2021 Pukul 10.00).xlsx")
-jun21 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (30 June 2021 Pukul 10.00).xlsx")
-jul21 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (31 July 2021 Pukul 10.00).xlsx")
-aug21 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (31 August 2021 Pukul 10.00).xlsx")
+oct21 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (31 October 2021 Pukul 10.00).xlsx")
 ```
 
 ```{r}
-covid_all <- do.call("rbind", list(mar20, apr20, may20, jun20, jul20, aug20, sep20, oct20, nov20, dec20, jan21, feb21, mar21, apr21, may21, jun21, jul21, aug21))
+glimpse(oct21)
+```
 
-glimpse(covid_all)
+
+```{r}
+# covid_all <- do.call("rbind", list(mar20, apr20, may20, jun20, jul20, aug20, sep20, oct20, nov20, dec20, jan21, feb21, mar21, apr21, may21, jun21, jul21, aug21))
+# 
+# glimpse(covid_all)
 ```
 
 ```{r}
-write.csv(covid_all, "data/covid_all.csv", row.names = FALSE)
+write.csv(oct21, "data/covid_oct21.csv", row.names = FALSE)
 ```
 
 geospatial
 
 ```{r}
 dkijkt_sf = st_read(dsn = "data/geospatial", layer = "BATAS_DESA_DESEMBER_2019_DUKCAPIL_DKI_JAKARTA")
+head(dkijkt_sf,5)
 ```
 
 ```{r}
@@ -184,8 +174,10 @@ st_crs(dkijkt_sf)
 
 ```{r}
 dkijkt_sf23845 <- st_transform(dkijkt_sf, crs = 23845)
+st_crs(dkijkt_sf23845)
 ```
 
+Removing the outer islands of Jakarta
 
 ```{r}
 dkijkt_sf23845_main1 <- filter(dkijkt_sf23845, KAB_KOTA != "KEPULAUAN SERIBU")
@@ -197,11 +189,11 @@ dkijkt_sf23845_main
 ```
 
 ```{r}
-dkijkt_covid <- left_join(dkijkt_sf23845_main, covid_all, by = c("KODE_DESA" = "ID_KEL"))
+dkijkt_covid <- left_join(dkijkt_sf23845_main, oct21, by = c("KODE_DESA" = "ID_KEL"))
 ```
 
 ```{r}
-write.csv(dkijkt_covid, "data/dkijkt_covid_1.csv", row.names = FALSE)
+# write.csv(dkijkt_covid, "data/dkijkt_covid_1.csv", row.names = FALSE)
 ```
 
 ```{r}
@@ -209,20 +201,20 @@ dkijkt_ctrd <- st_centroid(dkijkt_covid, of_largest_polygon = TRUE)
 ```
 
 ```{r}
-write.csv(dkijkt_ctrd, "data/dkijkt_ctrd.csv", row.names = FALSE)
+write.csv(dkijkt_ctrd, "data/dkijkt_ctrd_oct21.csv", row.names = FALSE)
 ```
 
 
 ```{r}
-st_write(dkijkt_ctrd, "data/dkijkt_ctrd_xy.csv", layer_options = "GEOMETRY=AS_XY")
+st_write(dkijkt_ctrd, "data/dkijkt_ctrd_oct21_xy.csv", layer_options = "GEOMETRY=AS_XY")
 ```
 
 ```{r}
-dkijkt_covid_testing <- read_csv("data/dkijkt_ctrd.csv")
+dkijkt_covid_testing <- read_csv("data/dkijkt_ctrd_oct21.csv")
 ```
 
 ```{r}
-dkijkt_covid_testing <- read_csv("data/dkijkt_ctrd_xy.csv")
+dkijkt_covid_testing <- read_csv("data/dkijkt_ctrd_oct21_xy.csv")
 
 dkijkt_covid_testing1 <- st_as_sf(dkijkt_covid_testing,
                           coords = c("X", 
@@ -249,6 +241,38 @@ tm_shape(pointsofint_sf)+
   tm_dots()
 tmap_mode("plot")
 ```
+
+```{r}
+colnames(pointsofint_sf)
+```
+
+```{r}
+lengths(lapply(pointsofint_sf, unique))
+```
+
+```{r}
+amenity_count = pointsofint_sf %>% 
+  group_by(amenity) %>% 
+  summarise(unique_elements = n_distinct(osm_id))
+```
+
+```{r}
+amenity_count[order(amenity_count$unique_elements, decreasing = TRUE),] %>% 
+  slice_max(unique_elements,n= 11)
+```
+
+
+```{r}
+shop_count = pointsofint_sf %>% 
+  group_by(shop) %>% 
+  summarise(unique_elements = n_distinct(osm_id))
+```
+
+```{r}
+shop_count[order(shop_count$unique_elements, decreasing = TRUE),] %>% 
+  slice_max(unique_elements,n= 11)
+```
+
 
 ### Attraction
 
@@ -584,23 +608,36 @@ dkijkt_covid_updated <- cbind(dkijkt_covid_updated, PROX_HEALTHCARE)
 ```
 
 ```{r}
-dkijkt_covid_updated_my <- dkijkt_covid_updated %>% filter(Month_Year == "Aug_2021")
+# dkijkt_covid_updated_my <- dkijkt_covid_updated %>% filter(Month_Year == "Aug_2021")
 ```
 
 ```{r}
-glimpse(dkijkt_covid_updated_my)
+glimpse(dkijkt_covid_updated)
 ```
 
 ```{r}
-st_write(dkijkt_covid_updated_my, "data/dkijkt_covid_updated_my.csv", layer_options = "GEOMETRY=AS_XY")
+st_write(dkijkt_covid_updated, "data/dkijkt_covid_updated.csv", layer_options = "GEOMETRY=AS_XY")
 ```
 
 ```{r}
-dkijkt_covid_updated_mytest <- read_csv("data/dkijkt_covid_updated_my.csv")
+dkijkt_covid_updated_mytest <- read_csv("data/dkijkt_covid_updated.csv")
 glimpse(dkijkt_covid_updated_mytest)
 ```
 
 ```{r}
 library(corrplot)
-corrplot(cor(dkijkt_covid_updated_mytest[, 21:25]), diag = FALSE, order = "AOE",
+corrplot(cor(dkijkt_covid_updated_mytest[, 18:21]), diag = FALSE, order = "AOE",
          tl.pos = "td", tl.cex = 0.7, number.cex=0.5, method = "number", type = "upper")
+```
+
+
+
+
+
+
+
+
+
+
+
+
