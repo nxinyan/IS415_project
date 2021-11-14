@@ -12,73 +12,17 @@ output: distill::distill_article
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## 1. Installing the necessary packages
-
-* GWmodel: for Geospatial Statistical modelling
-* sf: for handling Spatial Data
-* tidyverse: for Attribute data handling
-* tmap: for plotting maps
-
 ```{r}
-
-packages = c('sf', 'tidyverse', 'readxl', 'tmap', 'raster',  'knitr', 'dplyr','olsrr', 'corrplot', 'ggpubr', 'spdep', 'GWmodel')
-
+packages = c('sf', 'tidyverse', 'readxl', 'tmap', 'raster', 'knitr', 'dplyr', 'olsrr','GWmodel','corrplot','ggpubr', 'spdep')
 for (p in packages){
   if(!require(p, character.only = T)){
     install.packages(p)
   }
   library(p,character.only = T)
 }
-```
-
-```{r}
-str_name<-'data/population/idn_ppp_2020_1km_Aggregated.tif'
-
-population2020_raster = raster(str_name)
-```
-
-```{r}
-tmap_mode("view")
-tm_shape(population2020_raster) + 
-  tm_raster(palette = "Paired", alpha = 0.7) +
-  tm_basemap("OpenStreetMap")
-tmap_mode("plot")
-```
-
-
-Total Density 2020 Unconstrained, Unadjusted, 1km
-
-```{r}
-str_name<-'data/population/idn_pd_2020_1km.tif'
-
-populationden2020_raster = raster(str_name)
-```
-
-```{r}
-tmap_mode("view")
-tm_shape(populationden2020_raster) + 
-  tm_raster(palette = "Paired", alpha = 0.7) +
-  tm_basemap("OpenStreetMap")
-tmap_mode("plot")
-```
-
-Birth 2015 
-
-```{r}
-str_name<-'data/birth/IDN_births_pp_v2_2015.tif'
-
-birth_raster = raster(str_name)
-```
-
-```{r}
-tmap_mode("view")
-tm_shape(birth_raster) + 
-  tm_raster(palette = "Paired", alpha = 0.7) +
-  tm_basemap("OpenStreetMap")
-tmap_mode("plot")
 ```
 
 
@@ -92,11 +36,10 @@ get.var <- function(vname,df) {
 }
 ```
 
-
-ID KEL FUNCTION 
+Meninggal function
 
 ```{r}
-unique_column_data_idkel <- function(data) {
+unique_column_data_meninggal <- function(data) {
   thedata <- read_xlsx(data, sheet = "data", .name_repair = "minimal")
 
   names(thedata) <- make.unique(names(thedata))
@@ -106,33 +49,7 @@ unique_column_data_idkel <- function(data) {
     mutate(thedata, Year = str_sub(data, -22, -19)) %>%
     mutate(thedata, Month_Year = paste(str_sub(data, 49, 51), str_sub(data, -22, -19), sep = "_", collapse = NULL))
   
-  extracted_data <-  dplyr::select(data_withmonyear, `ID_KEL`, `Nama_provinsi`, `nama_kota`, `nama_kecamatan`, `nama_kelurahan`, `POSITIF`, `Meninggal`, `Month`, `Year`, `Month_Year`) %>%
-    drop_na()
-  
-  return(extracted_data)
-}
-```
-
-LOAD ID KEL DATA
-
-```{r}
-oct21 <- unique_column_data_idkel("data/aspatial/Standar Kelurahan Data Corona (31 October 2021 Pukul 10.00).xlsx")
-```
-
-Meninggal function
-
-```{r}
-unique_column_data_meninggal <- function(data) {
-  thedata <- read_xlsx(data, sheet = "data", .name_repair = "minimal")
-
-  names(thedata) <- make.unique(names(thedata))
-  
-  # data_withmonyear <- thedata %>%
-  #   mutate(thedata, Month = str_sub(data, 49, 51)) %>%
-  #   mutate(thedata, Year = str_sub(data, -22, -19)) %>%
-  #   mutate(thedata, Month_Year = paste(str_sub(data, 49, 51), str_sub(data, -22, -19), sep = "_", collapse = NULL))
-  
-  extracted_data <- dplyr::select(thedata, `ID_KEL`, `Nama_provinsi`, `nama_kota`, `nama_kecamatan`, `nama_kelurahan`, `POSITIF`, `Meninggal.1`) %>%
+  extracted_data <- dplyr::select(data_withmonyear, `ID_KEL`, `Nama_provinsi`, `nama_kota`, `nama_kecamatan`, `nama_kelurahan`, `POSITIF`, `Meninggal.1`, `Month`, `Year`, `Month_Year`) %>%
     rename(`Meninggal` = `Meninggal.1`) %>%
     drop_na()
     
@@ -143,29 +60,13 @@ unique_column_data_meninggal <- function(data) {
 LOAD MENINGGAL DATA
 
 ```{r}
-oct21 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (31 October 2021 Pukul 10.00).xlsx")
-```
-
-```{r}
-glimpse(oct21)
-```
-
-
-```{r}
-# covid_all <- do.call("rbind", list(mar20, apr20, may20, jun20, jul20, aug20, sep20, oct20, nov20, dec20, jan21, feb21, mar21, apr21, may21, jun21, jul21, aug21))
-# 
-# glimpse(covid_all)
-```
-
-```{r}
-write.csv(oct21, "data/covid_oct21.csv", row.names = FALSE)
+oct21 <- unique_column_data_meninggal("data/aspatial/Standar Kelurahan Data Corona (31 Oktober 2021 Pukul 10.00).xlsx")
 ```
 
 geospatial
 
 ```{r}
 dkijkt_sf = st_read(dsn = "data/geospatial", layer = "BATAS_DESA_DESEMBER_2019_DUKCAPIL_DKI_JAKARTA")
-head(dkijkt_sf,5)
 ```
 
 ```{r}
@@ -174,10 +75,8 @@ st_crs(dkijkt_sf)
 
 ```{r}
 dkijkt_sf23845 <- st_transform(dkijkt_sf, crs = 23845)
-st_crs(dkijkt_sf23845)
 ```
 
-Removing the outer islands of Jakarta
 
 ```{r}
 dkijkt_sf23845_main1 <- filter(dkijkt_sf23845, KAB_KOTA != "KEPULAUAN SERIBU")
@@ -193,28 +92,24 @@ dkijkt_covid <- left_join(dkijkt_sf23845_main, oct21, by = c("KODE_DESA" = "ID_K
 ```
 
 ```{r}
-# write.csv(dkijkt_covid, "data/dkijkt_covid_1.csv", row.names = FALSE)
-```
-
-```{r}
 dkijkt_ctrd <- st_centroid(dkijkt_covid, of_largest_polygon = TRUE)
 ```
 
 ```{r}
-write.csv(dkijkt_ctrd, "data/dkijkt_ctrd_oct21.csv", row.names = FALSE)
+# write.csv(dkijkt_ctrd, "data/dkijkt_ctrd.csv", row.names = FALSE)
 ```
 
 
 ```{r}
-st_write(dkijkt_ctrd, "data/dkijkt_ctrd_oct21_xy.csv", layer_options = "GEOMETRY=AS_XY")
+# st_write(dkijkt_ctrd, "data/dkijkt_ctrd_xy.csv", layer_options = "GEOMETRY=AS_XY")
 ```
 
 ```{r}
-dkijkt_covid_testing <- read_csv("data/dkijkt_ctrd_oct21.csv")
+dkijkt_covid_testing <- read_csv("data/dkijkt_ctrd.csv")
 ```
 
 ```{r}
-dkijkt_covid_testing <- read_csv("data/dkijkt_ctrd_oct21_xy.csv")
+dkijkt_covid_testing <- read_csv("data/dkijkt_ctrd_xy.csv")
 
 dkijkt_covid_testing1 <- st_as_sf(dkijkt_covid_testing,
                           coords = c("X", 
@@ -235,45 +130,6 @@ tmap_mode("plot")
 pointsofint_sf = st_read(dsn = "data/points_of_interests", layer = "hotosm_idn_jakarta_points_of_interest_points")
 ```
 
-```{r}
-tmap_mode("view")
-tm_shape(pointsofint_sf)+
-  tm_dots()
-tmap_mode("plot")
-```
-
-```{r}
-colnames(pointsofint_sf)
-```
-
-```{r}
-lengths(lapply(pointsofint_sf, unique))
-```
-
-```{r}
-amenity_count = pointsofint_sf %>% 
-  group_by(amenity) %>% 
-  summarise(unique_elements = n_distinct(osm_id))
-```
-
-```{r}
-amenity_count[order(amenity_count$unique_elements, decreasing = TRUE),] %>% 
-  slice_max(unique_elements,n= 11)
-```
-
-
-```{r}
-shop_count = pointsofint_sf %>% 
-  group_by(shop) %>% 
-  summarise(unique_elements = n_distinct(osm_id))
-```
-
-```{r}
-shop_count[order(shop_count$unique_elements, decreasing = TRUE),] %>% 
-  slice_max(unique_elements,n= 11)
-```
-
-
 ### Attraction
 
 ```{r}
@@ -309,96 +165,10 @@ PROX_ATTRACTION <- dist_dkijkt_attractiont_min$Min/1000
 dkijkt_covid_updated <- cbind(dkijkt_covid_testing1, PROX_ATTRACTION)
 ```
 
-```{r}
-dkijkt_covid_updated_df <- data.frame(dkijkt_covid_updated)
-tryplot <- st_as_sf(dkijkt_covid_updated_df, crs = 23845)
-```
-
-Points of Interests
+### Place of Worship
 
 ```{r}
-pointsofint_sf = st_read(dsn = "data/points_of_interests", layer = "hotosm_idn_jakarta_points_of_interest_points")
-```
-
-```{r}
-tmap_mode("view")
-tm_shape(pointsofint_sf) + 
-  tm_dots() +
-  tm_basemap("OpenStreetMap")
-tmap_mode("plot")
-```
-
-
-Education
-
-```{r}
-education_sf = st_read(dsn = "data/education", layer = "hotosm_idn_jakarta_education_facilities_points")
-```
-
-```{r}
-tmap_mode("view")
-tm_shape(education_sf) + 
-  tm_dots() +
-  tm_basemap("OpenStreetMap")
-tmap_mode("plot")
-```
-
-Airport 
-
-```{r}
-airport_sf = st_read(dsn = "data/airport", layer = "hotosm_idn_jakarta_airports_points")
-```
-
-```{r}
-tmap_mode("view")
-tm_shape(airport_sf) + 
-  tm_dots() +
-  tm_basemap("OpenStreetMap")
-tmap_mode("plot")
-```
-
-Healthcare
-
-```{r}
-healthcare_sf = st_read(dsn = "data/health_facilities", layer = "IDN_hospital_point")
-```
-
-```{r}
-st_crs(healthcare_sf)
-```
-
-```{r}
-healthcare <- st_transform(healthcare_sf, crs = 23845)
-```
-
-```{r}
-healthcare_dkijkt <- healthcare %>%
-                      filter(Province == "DKI Jakarta") %>%
-                      drop_na(District)
-```
-
-```{r}
-healthcare_dkijkt$DistrictUpper = toupper(healthcare_dkijkt$District)
-
-```
-
-```{r}
-healthcare_dkijkt[healthcare_dkijkt$DistrictUpper == "KOTA JAKARTA"] <- "JAKARTA"
-```
-
-```{r}
-tmap_mode("view")
-
-tm_shape(healthcare_dkijkt) + 
-  tm_dots() +
-  tm_view(set.zoom.limits = c(10,15))
-tmap_mode("plot")
-```
-
-### Attraction
-
-```{r}
-attraction <- pointsofint_sf %>% filter(tourism == "attraction")
+placeofworship <- pointsofint_sf %>% filter(amenity == "place_of_worship")
 ```
 
 ```{r}
@@ -408,39 +178,166 @@ dkijkt_covid2 <- dkijkt_covid1[,1:2]
 ```
 
 ```{r}
-attraction_df <- attraction$geometry
-correctgeo <- st_as_sf(attraction_df, crs=4326) %>%
+placeofworship_df <- placeofworship$geometry
+correctgeo <- st_as_sf(placeofworship_df, crs=4326) %>%
                 st_transform(crs = 23845)
-attractiongeo <- st_coordinates(correctgeo)
+placeofworshipgeo <- st_coordinates(correctgeo)
 ```
 
 ```{r}
-dist_dkijkt_attraction <- spDists(dkijkt_covid2, attractiongeo, longlat=FALSE)
+dist_dkijkt_placeofworship <- spDists(dkijkt_covid2, placeofworshipgeo, longlat=FALSE)
 ```
 
 ```{r}
-dist_dkijkt_attraction_df <- data.frame(dist_dkijkt_attraction)
+dist_dkijkt_placeofworship_df <- data.frame(dist_dkijkt_placeofworship)
 
-dist_dkijkt_attractiont_min <- dist_dkijkt_attraction_df %>% rowwise() %>% mutate(Min = min(c_across(X1:X191)))
+dist_dkijkt_placeofworship_min <- dist_dkijkt_placeofworship_df %>% rowwise() %>% mutate(Min = min(c_across(X1:X422)))
 
-PROX_ATTRACTION <- dist_dkijkt_attractiont_min$Min/1000
+PROX_WORSHIP <- dist_dkijkt_placeofworship_min$Min/1000
 ```
 
 ```{r}
-dkijkt_covid_updated <- cbind(dkijkt_covid_testing1, PROX_ATTRACTION)
+dkijkt_covid_updated <- cbind(dkijkt_covid_updated, PROX_WORSHIP)
+```
+
+### Restaurant
+
+```{r}
+restaurant <- pointsofint_sf %>% filter(amenity == "restaurant")
 ```
 
 ```{r}
-dkijkt_covid_updated_df <- data.frame(dkijkt_covid_updated)
-tryplot <- st_as_sf(dkijkt_covid_updated_df, crs = 23845)
+dkijkt_covid_geo <- dkijkt_covid_testing1$geometry
+dkijkt_covid1 <- st_coordinates(dkijkt_covid_geo)
+dkijkt_covid2 <- dkijkt_covid1[,1:2]
 ```
 
 ```{r}
-tmap_mode("view")
-tm_shape(tryplot) +  
-  tm_dots() +
-  tm_view(set.zoom.limits = c(10,15))
-tmap_mode("plot")
+restaurant_df <- restaurant$geometry
+correctgeo <- st_as_sf(restaurant_df, crs=4326) %>%
+                st_transform(crs = 23845)
+restaurantgeo <- st_coordinates(correctgeo)
+```
+
+```{r}
+dist_dkijkt_restaurant <- spDists(dkijkt_covid2, restaurantgeo, longlat=FALSE)
+```
+
+```{r}
+dist_dkijkt_restaurant_df <- data.frame(dist_dkijkt_restaurant)
+
+dist_dkijkt_restaurant_min <- dist_dkijkt_restaurant_df %>% rowwise() %>% mutate(Min = min(c_across(X1:X1082)))
+
+PROX_RESTAURANT <- dist_dkijkt_restaurant_min$Min/1000
+```
+
+```{r}
+dkijkt_covid_updated <- cbind(dkijkt_covid_updated, PROX_RESTAURANT)
+```
+
+### Mall
+
+```{r}
+mall <- pointsofint_sf %>% filter(shop == "mall")
+```
+
+```{r}
+dkijkt_covid_geo <- dkijkt_covid_testing1$geometry
+dkijkt_covid1 <- st_coordinates(dkijkt_covid_geo)
+dkijkt_covid2 <- dkijkt_covid1[,1:2]
+```
+
+```{r}
+mall_df <- mall$geometry
+correctgeo <- st_as_sf(mall_df, crs=4326) %>%
+                st_transform(crs = 23845)
+mallgeo <- st_coordinates(correctgeo)
+```
+
+```{r}
+dist_dkijkt_mall <- spDists(dkijkt_covid2, mallgeo, longlat=FALSE)
+```
+
+```{r}
+dist_dkijkt_mall_df <- data.frame(dist_dkijkt_mall)
+
+dist_dkijkt_mall_min <- dist_dkijkt_mall_df %>% rowwise() %>% mutate(Min = min(c_across(X1:X95)))
+
+PROX_MALL <- dist_dkijkt_mall_min$Min/1000
+```
+
+```{r}
+dkijkt_covid_updated <- cbind(dkijkt_covid_updated, PROX_MALL)
+```
+
+### Supermarket
+
+```{r}
+supermarket <- pointsofint_sf %>% filter(shop == "supermarket")
+```
+
+```{r}
+dkijkt_covid_geo <- dkijkt_covid_testing1$geometry
+dkijkt_covid1 <- st_coordinates(dkijkt_covid_geo)
+dkijkt_covid2 <- dkijkt_covid1[,1:2]
+```
+
+```{r}
+supermarket_df <- supermarket$geometry
+correctgeo <- st_as_sf(supermarket_df, crs=4326) %>%
+                st_transform(crs = 23845)
+supermarketgeo <- st_coordinates(correctgeo)
+```
+
+```{r}
+dist_dkijkt_supermarket <- spDists(dkijkt_covid2, supermarketgeo, longlat=FALSE)
+```
+
+```{r}
+dist_dkijkt_supermarket_df <- data.frame(dist_dkijkt_supermarket)
+
+dist_dkijkt_supermarket_min <- dist_dkijkt_supermarket_df %>% rowwise() %>% mutate(Min = min(c_across(X1:X261)))
+
+PROX_SUPERMARKET <- dist_dkijkt_supermarket_min$Min/1000
+```
+
+```{r}
+dkijkt_covid_updated <- cbind(dkijkt_covid_updated, PROX_SUPERMARKET)
+```
+
+### Convenience
+
+```{r}
+convenience <- pointsofint_sf %>% filter(shop == "convenience")
+```
+
+```{r}
+dkijkt_covid_geo <- dkijkt_covid_testing1$geometry
+dkijkt_covid1 <- st_coordinates(dkijkt_covid_geo)
+dkijkt_covid2 <- dkijkt_covid1[,1:2]
+```
+
+```{r}
+convenience_df <- convenience$geometry
+correctgeo <- st_as_sf(convenience_df, crs=4326) %>%
+                st_transform(crs = 23845)
+conveniencegeo <- st_coordinates(correctgeo)
+```
+
+```{r}
+dist_dkijkt_convenience <- spDists(dkijkt_covid2, conveniencegeo, longlat=FALSE)
+```
+
+```{r}
+dist_dkijkt_convenience_df <- data.frame(dist_dkijkt_convenience)
+
+dist_dkijkt_convenience_min <- dist_dkijkt_convenience_df %>% rowwise() %>% mutate(Min = min(c_across(X1:X848)))
+
+PROX_CONVENIENCE <- dist_dkijkt_convenience_min$Min/1000
+```
+
+```{r}
+dkijkt_covid_updated <- cbind(dkijkt_covid_updated, PROX_CONVENIENCE)
 ```
 
 ## Education
@@ -607,35 +504,443 @@ PROX_HEALTHCARE <- dist_dkijkt_healthcare_min$Min/1000
 dkijkt_covid_updated <- cbind(dkijkt_covid_updated, PROX_HEALTHCARE)
 ```
 
+## Railway
+
 ```{r}
-# dkijkt_covid_updated_my <- dkijkt_covid_updated %>% filter(Month_Year == "Aug_2021")
+railways_sf = st_read(dsn = "data/railways", layer = "hotosm_idn_jakarta_railways_polygons")
 ```
 
 ```{r}
-glimpse(dkijkt_covid_updated)
+railways <- st_transform(railways_sf, crs = 23845)
 ```
 
 ```{r}
-st_write(dkijkt_covid_updated, "data/dkijkt_covid_updated.csv", layer_options = "GEOMETRY=AS_XY")
+railways <- st_centroid(railways, of_largest_polygon = TRUE)
+```
+
+
+```{r}
+dkijkt_covid_geo <- dkijkt_covid_testing1$geometry
+dkijkt_covid1 <- st_coordinates(dkijkt_covid_geo)
+dkijkt_covid2 <- dkijkt_covid1[,1:2]
 ```
 
 ```{r}
-dkijkt_covid_updated_mytest <- read_csv("data/dkijkt_covid_updated.csv")
-glimpse(dkijkt_covid_updated_mytest)
+railways_df <- railways$geometry
+correctgeo <- st_as_sf(railways_df, crs=23845)
+railwaysgeo <- st_coordinates(correctgeo)
 ```
 
 ```{r}
+dist_dkijkt_railways <- spDists(dkijkt_covid2, railwaysgeo, longlat=FALSE)
+```
+
+```{r}
+dist_dkijkt_railways_df <- data.frame(dist_dkijkt_railways)
+
+dist_dkijkt_railways_min <- dist_dkijkt_railways_df %>% rowwise() %>% mutate(Min = min(c_across(X1:X25)))
+
+PROX_RAILWAYS <- dist_dkijkt_railways_min$Min/1000
+```
+
+```{r}
+dkijkt_covid_updated <- cbind(dkijkt_covid_updated, PROX_RAILWAYS)
+```
+
+### export a copy
+
+```{r}
+# st_write(dkijkt_covid_updated, "data/dkijkt_covid_updated.csv", layer_options = "GEOMETRY=AS_XY")
+```
+
+## Load latest updated csv data.
+
+```{r}
+dkijkt_covid_updated_xy <- read_csv("data/dkijkt_covid_updated.csv")
+
+dkijkt_covid_updated_xy <- st_as_sf(dkijkt_covid_updated_xy,
+                          coords = c("X", 
+                                     "Y"),
+                          crs=23845)
+
+dkijkt_covid_updated_xy_df <- as.data.frame(dkijkt_covid_updated_xy)
+```
+
+```{r}
+colnames(dkijkt_covid_updated_xy_df)
+```
+
+
+
+```{r}
+
 library(corrplot)
-corrplot(cor(dkijkt_covid_updated_mytest[, 18:21]), diag = FALSE, order = "AOE",
+corrplot(cor(dkijkt_covid_updated_xy_df[, c("POSITIF","JUMLAH_PEN","PROX_ATTRACTION","PROX_WORSHIP","PROX_RESTAURANT","PROX_MALL", "PROX_SUPERMARKET", "PROX_CONVENIENCE", "PROX_KINDERGARTENS", "PROX_SCHOOL", "PROX_TERMINAL", "PROX_HEALTHCARE", "PROX_RAILWAYS")]), diag = FALSE, order = "AOE",
          tl.pos = "td", tl.cex = 0.7, number.cex=0.5, method = "number", type = "upper")
 ```
 
+OTHERS
 
 
 
+Population Counts (Unconstrained 2020, 1km resolution)
+
+```{r}
+library(raster)
+str_name<-'data/population/idn_ppp_2020_1km_Aggregated.tif'
+
+population2020_raster = raster(str_name)
+```
+
+```{r}
+tmap_mode("view")
+tm_shape(population2020_raster) + 
+  tm_raster(palette = "Paired", alpha = 0.7) +
+  tm_basemap("OpenStreetMap")
+tmap_mode("plot")
+```
 
 
+Total Density 2020 Unconstrained, Unadjusted, 1km
 
+```{r}
+library(raster)
+str_name<-'data/population/idn_pd_2020_1km.tif'
+
+populationden2020_raster = raster(str_name)
+```
+
+```{r}
+tmap_mode("view")
+tm_shape(populationden2020_raster) + 
+  tm_raster(palette = "Paired", alpha = 0.7) +
+  tm_basemap("OpenStreetMap")
+tmap_mode("plot")
+```
+
+Birth 2015 
+
+```{r}
+library(raster)
+str_name<-'data/birth/IDN_births_pp_v2_2015.tif'
+
+birth_raster = raster(str_name)
+```
+
+```{r}
+tmap_mode("view")
+tm_shape(birth_raster) + 
+  tm_raster(palette = "Paired", alpha = 0.7) +
+  tm_basemap("OpenStreetMap")
+tmap_mode("plot")
+```
+
+```{r}
+# colnames(pointsofint_sf)
+```
+
+```{r}
+# lengths(lapply(pointsofint_sf, unique))
+```
+
+```{r}
+# amenity_count = pointsofint_sf %>% 
+#   group_by(amenity) %>% 
+#   summarise(unique_elements = n_distinct(osm_id))
+```
+
+```{r}
+# amenity_count[order(amenity_count$unique_elements, decreasing = TRUE),] %>% 
+#   slice_max(unique_elements,n= 11)
+```
+
+
+```{r}
+# shop_count = pointsofint_sf %>% 
+#   group_by(shop) %>% 
+#   summarise(unique_elements = n_distinct(osm_id))
+```
+
+```{r}
+# shop_count[order(shop_count$unique_elements, decreasing = TRUE),] %>% 
+#   slice_max(unique_elements,n= 11)
+```
+
+## EDA
+
+```{r}
+head(dkijkt_covid_updated)
+```
+
+Histogram for all proximity factors
+
+```{r}
+prx_attraction = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_ATTRACTION`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+prx_worship = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_WORSHIP`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+prx_restaurant = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_RESTAURANT`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+prx_mall = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_MALL`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+prx_supermarket = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_SUPERMARKET`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+prx_convenience = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_CONVENIENCE`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+prx_kindergartens = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_KINDERGARTENS`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+prx_schools = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_SCHOOL`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+prx_terminal = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_TERMINAL`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+prx_healthcare = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_HEALTHCARE`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+prx_railways = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_RAILWAYS`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+ggarrange(prx_attraction, prx_worship, prx_restaurant, prx_mall, prx_supermarket, prx_convenience, prx_kindergartens, prx_schools, prx_terminal, prx_healthcare, prx_railways,  ncol = 3, nrow = 4)
+# ggarrange from ggpubr package
+```
+
+```{r}
+tm_shape(dkijkt_sf23845_main)+
+  tm_polygons()
+```
+
+```{r}
+create_map = function(df, vname, legtitle = NA,mtitle = NA){
+  tm_shape(df) +
+    tm_fill(vname,
+            style = "quantile",
+            palette = "Blues",
+            title = legtitle
+            )+
+    tm_layout(main.title = mtitle,
+              main.title.position = "center",
+              main.title.size = 0.8,
+              legend.outside = TRUE,
+              legend.position = c("right","bottom"),
+              frame = TRUE
+              )+
+    tm_borders(alpha = 0.5)+
+    tm_scale_bar(width = 0.15) +
+    tm_grid(lwd = 0.1, alpha = 0.2) +
+    tm_credits("Source: Open Data Covid-19 Provinsi DKI Jakarta. from Riwayat File Covid-19 DKI Jakarta", 
+               position = c("left", "bottom"))
+}
+```
+
+```{r}
+positives = create_map(dkijkt_covid, 'POSITIF', "Cumulative Postive Cases as at 31st October 2021")
+positives
+```
+
+```{r}
+deaths = create_map(dkijkt_covid, 'Meninggal', "Cumulative Death Cases as at 31st October 2021")
+deaths
+```
+
+```{r}
+tm_shape(dkijkt_sf23845_main)+
+  tm_polygons() +
+tm_shape(dkijkt_covid) +  
+  tm_dots(col = "POSITIF",
+          alpha = 0.6,
+          style="quantile",
+          size = 0.5) +
+  tm_view(set.zoom.limits = c(11,14))
+```
+
+```{r}
+tm_shape(dkijkt_sf23845_main)+
+  tm_polygons() +
+tm_shape(dkijkt_covid) +  
+  tm_dots(col = "Meninggal",
+          alpha = 0.6,
+          style="quantile",
+          size = 0.5) +
+  tm_view(set.zoom.limits = c(11,14))
+```
+
+## GWR
+
+### Hedonic Price Modelling
+
+```{r}
+dkijkt_covid_updated_xy_df.slr <- lm(formula=POSITIF ~ JUMLAH_PEN, data = dkijkt_covid_updated_xy_df)
+```
+
+```{r}
+summary(dkijkt_covid_updated_xy_df.slr)
+```
+
+```{r}
+ggplot(data=dkijkt_covid_updated_xy_df,  
+       aes(x=`JUMLAH_PEN`, y=`POSITIF`)) +
+  geom_point() +
+  geom_smooth(method = lm)
+```
+
+### Multi Linear Regression Method
+
+```{r}
+col = c("POSITIF","JUMLAH_PEN","PROX_ATTRACTION","PROX_WORSHIP","PROX_RESTAURANT","PROX_MALL", "PROX_SUPERMARKET", "PROX_CONVENIENCE", "PROX_KINDERGARTENS", "PROX_SCHOOL", "PROX_TERMINAL", "PROX_HEALTHCARE", "PROX_RAILWAYS")
+col
+```
+
+
+```{r}
+dkijkt_covid_updated_xy.mlr = lm(formula = POSITIF ~ JUMLAH_PEN + PROX_ATTRACTION  + PROX_WORSHIP + PROX_RESTAURANT + PROX_MALL  + PROX_SUPERMARKET + PROX_CONVENIENCE  + PROX_KINDERGARTENS  + PROX_SCHOOL  + PROX_TERMINAL  + PROX_HEALTHCARE + PROX_RAILWAYS, data=dkijkt_covid_updated_xy)
+summary(dkijkt_covid_updated_xy.mlr)
+```
+
+```{r}
+dkijkt_covid_updated_xy.mlr1 = lm(formula = POSITIF ~ JUMLAH_PEN + PROX_RESTAURANT + PROX_TERMINAL, data=dkijkt_covid_updated_xy)
+# summary(dkijkt_covid_updated_xy.mlr1)
+ols_regress(dkijkt_covid_updated_xy.mlr1)
+```
+
+```{r}
+ols_vif_tol(dkijkt_covid_updated_xy.mlr1)
+```
+
+```{r}
+ols_plot_resid_fit(dkijkt_covid_updated_xy.mlr1)
+```
+
+```{r}
+ols_plot_resid_hist(dkijkt_covid_updated_xy.mlr1)
+```
+
+```{r}
+ols_test_normality(dkijkt_covid_updated_xy.mlr1)
+```
+
+```{r}
+mlr.output <- as.data.frame(dkijkt_covid_updated_xy.mlr1$residuals)
+```
+
+```{r}
+dkijkt_covid_updated_xy.res.sf <- cbind(dkijkt_covid_updated_xy,  dkijkt_covid_updated_xy.mlr1$residuals) %>%
+rename(`MLR_RES` = `dkijkt_covid_updated_xy.mlr1.residuals`)
+```
+
+```{r}
+dkijkt_covid_updated_xy.sp <- as_Spatial(dkijkt_covid_updated_xy.res.sf)
+dkijkt_covid_updated_xy.sp
+```
+
+```{r}
+tmap_mode("view")
+tm_shape(dkijkt_covid)+
+  tm_polygons(alpha = 0.4) +
+tm_shape(dkijkt_covid_updated_xy.res.sf) +  
+  tm_dots(col = "MLR_RES",
+          alpha = 0.6,
+          style="quantile") +
+  tm_view(set.zoom.limits = c(10,15))
+tmap_mode("plot")
+```
+
+```{r}
+nb <- dnearneigh(coordinates(dkijkt_covid_updated_xy.sp), 0, 3500, longlat = FALSE)
+summary(nb)
+```
+
+```{r}
+nb_lw <- nb2listw(nb, style = 'W')
+summary(nb_lw)
+```
+
+```{r}
+lm.morantest(dkijkt_covid_updated_xy.mlr1, nb_lw)
+```
+
+```{r}
+bw.fixed <- bw.gwr(formula = POSITIF ~ JUMLAH_PEN + PROX_RESTAURANT + PROX_TERMINAL, data=dkijkt_covid_updated_xy.sp, approach="CV", kernel="gaussian", adaptive=FALSE, longlat=FALSE)
+```
+
+```{r}
+gwr.fixed <- gwr.basic(formula = POSITIF ~ JUMLAH_PEN + PROX_RESTAURANT + PROX_TERMINAL, data=dkijkt_covid_updated_xy.sp, bw=bw.fixed, kernel = 'gaussian', longlat = FALSE)
+```
+
+```{r}
+gwr.fixed
+```
+
+Global adjusted r square: 0.7163
+GWR adjusted r square: 0.7840
+
+```{r}
+bw.adaptive <- bw.gwr(formula = POSITIF ~ JUMLAH_PEN + PROX_RESTAURANT + PROX_TERMINAL, data=dkijkt_covid_updated_xy.sp, approach="CV", kernel="gaussian",
+adaptive=TRUE, longlat=FALSE)
+```
+
+Select bandwith of 18
+
+```{r}
+gwr.adaptive <- gwr.basic(formula = POSITIF ~ JUMLAH_PEN + PROX_RESTAURANT + PROX_TERMINAL, data=dkijkt_covid_updated_xy.sp, bw=bw.adaptive, kernel = 'gaussian', adaptive=TRUE, longlat = FALSE)
+```
+
+```{r}
+gwr.adaptive
+```
+
+```{r}
+dkijkt_covid_updated_xy.adaptive <- st_as_sf(gwr.adaptive$SDF) %>%
+  st_transform(crs=23845)
+```
+
+```{r}
+dkijkt_covid_updated_xy.adaptive.svy21 <- st_transform(dkijkt_covid_updated_xy.adaptive, 23845)
+dkijkt_covid_updated_xy.adaptive.svy21  
+```
+
+```{r}
+gwr.adaptive.output <- as.data.frame(gwr.adaptive$SDF)
+dkijkt_covid_updated_xy.adaptive <- cbind(dkijkt_covid_updated_xy.res.sf, as.matrix(gwr.adaptive.output))
+```
+
+```{r}
+glimpse(dkijkt_covid_updated_xy.adaptive)
+```
+
+```{r}
+summary(gwr.adaptive$SDF$yhat)
+```
+
+```{r}
+tmap_mode("view")
+tm_shape(dkijkt_covid)+
+  tm_polygons(alpha = 0.1) +
+tm_shape(dkijkt_covid_updated_xy.adaptive) +  
+  tm_dots(col = "Local_R2",
+          border.col = "gray60",
+          border.lwd = 1) +
+  tm_view(set.zoom.limits = c(10,15))
+tmap_mode("plot")
+```
+
+```{r}
+tm_shape(dkijkt_covid[dkijkt_covid$KECAMATAN=="CENGKARENG", ])+
+  tm_polygons(alpha = 0.1) +
+tm_shape(dkijkt_covid_updated_xy.adaptive) +  
+  tm_dots(col = "Local_R2",
+          border.col = "gray60",
+          border.lwd = 1,
+          size= 1.5) +
+  tm_view(set.zoom.limits = c(10,15))
+```
 
 
 
