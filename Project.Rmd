@@ -96,7 +96,7 @@ dkijkt_ctrd <- st_centroid(dkijkt_covid, of_largest_polygon = TRUE)
 ```
 
 ```{r}
-# write.csv(dkijkt_ctrd, "data/dkijkt_ctrd.csv", row.names = FALSE)
+# write.csv(dkijkt_covid_updated_xy, "data/dkijkt_covid_updated_xy.csv", row.names = FALSE)
 ```
 
 
@@ -669,43 +669,46 @@ tmap_mode("plot")
 ## EDA
 
 ```{r}
-head(dkijkt_covid_updated)
+jakarta_covid = read_csv("data/dkijkt_covid_updated.csv") 
+jakarta_covid.sf = st_as_sf(jakarta_covid,coords = c("X", "Y"),crs=23845)
+
+glimpse(jakarta_covid.sf)
 ```
 
 Histogram for all proximity factors
 
 ```{r}
-prx_attraction = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_ATTRACTION`)) +
+prx_attraction = ggplot(data=jakarta_covid.sf, aes(x= `PROX_ATTRACTION`)) +
   geom_histogram(bins=20, color="black", fill="light blue")
 
-prx_worship = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_WORSHIP`)) +
+prx_worship = ggplot(data=jakarta_covid.sf, aes(x= `PROX_WORSHIP`)) +
   geom_histogram(bins=20, color="black", fill="light blue")
 
-prx_restaurant = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_RESTAURANT`)) +
+prx_restaurant = ggplot(data=jakarta_covid.sf, aes(x= `PROX_RESTAURANT`)) +
   geom_histogram(bins=20, color="black", fill="light blue")
 
-prx_mall = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_MALL`)) +
+prx_mall = ggplot(data=jakarta_covid.sf, aes(x= `PROX_MALL`)) +
   geom_histogram(bins=20, color="black", fill="light blue")
 
-prx_supermarket = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_SUPERMARKET`)) +
+prx_supermarket = ggplot(data=jakarta_covid.sf, aes(x= `PROX_SUPERMARKET`)) +
   geom_histogram(bins=20, color="black", fill="light blue")
 
-prx_convenience = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_CONVENIENCE`)) +
+prx_convenience = ggplot(data=jakarta_covid.sf, aes(x= `PROX_CONVENIENCE`)) +
   geom_histogram(bins=20, color="black", fill="light blue")
 
-prx_kindergartens = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_KINDERGARTENS`)) +
+prx_kindergartens = ggplot(data=jakarta_covid.sf, aes(x= `PROX_KINDERGARTENS`)) +
   geom_histogram(bins=20, color="black", fill="light blue")
 
-prx_schools = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_SCHOOL`)) +
+prx_schools = ggplot(data=jakarta_covid.sf, aes(x= `PROX_SCHOOL`)) +
   geom_histogram(bins=20, color="black", fill="light blue")
 
-prx_terminal = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_TERMINAL`)) +
+prx_terminal = ggplot(data=jakarta_covid.sf, aes(x= `PROX_TERMINAL`)) +
   geom_histogram(bins=20, color="black", fill="light blue")
 
-prx_healthcare = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_HEALTHCARE`)) +
+prx_healthcare = ggplot(data=jakarta_covid.sf, aes(x= `PROX_HEALTHCARE`)) +
   geom_histogram(bins=20, color="black", fill="light blue")
 
-prx_railways = ggplot(data=dkijkt_covid_updated_xy_df, aes(x= `PROX_RAILWAYS`)) +
+prx_railways = ggplot(data=jakarta_covid.sf, aes(x= `PROX_RAILWAYS`)) +
   geom_histogram(bins=20, color="black", fill="light blue")
 
 ggarrange(prx_attraction, prx_worship, prx_restaurant, prx_mall, prx_supermarket, prx_convenience, prx_kindergartens, prx_schools, prx_terminal, prx_healthcare, prx_railways,  ncol = 3, nrow = 4)
@@ -741,19 +744,19 @@ create_map = function(df, vname, legtitle = NA,mtitle = NA){
 ```
 
 ```{r}
-positives = create_map(dkijkt_covid, 'POSITIF', "Cumulative Postive Cases as at 31st October 2021")
-positives
+# positives = create_map(jakarta_covid.sf, 'POSITIF', "Cumulative Postive Cases as at 31st October 2021")
+# positives
 ```
 
 ```{r}
-deaths = create_map(dkijkt_covid, 'Meninggal', "Cumulative Death Cases as at 31st October 2021")
-deaths
+# deaths = create_map(dkijkt_covid, 'Meninggal', "Cumulative Death Cases as at 31st October 2021")
+# deaths
 ```
 
 ```{r}
 tm_shape(dkijkt_sf23845_main)+
   tm_polygons() +
-tm_shape(dkijkt_covid) +  
+tm_shape(jakarta_covid.sf) +  
   tm_dots(col = "POSITIF",
           alpha = 0.6,
           style="quantile",
@@ -764,7 +767,7 @@ tm_shape(dkijkt_covid) +
 ```{r}
 tm_shape(dkijkt_sf23845_main)+
   tm_polygons() +
-tm_shape(dkijkt_covid) +  
+tm_shape(jakarta_covid.sf) +  
   tm_dots(col = "Meninggal",
           alpha = 0.6,
           style="quantile",
@@ -777,74 +780,79 @@ tm_shape(dkijkt_covid) +
 ### Hedonic Price Modelling
 
 ```{r}
-dkijkt_covid_updated_xy_df.slr <- lm(formula=POSITIF ~ JUMLAH_PEN, data = dkijkt_covid_updated_xy_df)
+# jakarte_covid.slr <- lm(formula=POSITIF ~ JUMLAH_PEN, data = jakarta_covid.sf)
 ```
 
 ```{r}
-summary(dkijkt_covid_updated_xy_df.slr)
+# summary(dkijkt_covid_updated_xy_df.slr)
 ```
 
 ```{r}
-ggplot(data=dkijkt_covid_updated_xy_df,  
-       aes(x=`JUMLAH_PEN`, y=`POSITIF`)) +
-  geom_point() +
-  geom_smooth(method = lm)
+# ggplot(data=dkijkt_covid_updated_xy_df,  
+#        aes(x=`JUMLAH_PEN`, y=`POSITIF`)) +
+#   geom_point() +
+#   geom_smooth(method = lm)
 ```
 
 ### Multi Linear Regression Method
+
 
 ```{r}
 col = c("POSITIF","JUMLAH_PEN","PROX_ATTRACTION","PROX_WORSHIP","PROX_RESTAURANT","PROX_MALL", "PROX_SUPERMARKET", "PROX_CONVENIENCE", "PROX_KINDERGARTENS", "PROX_SCHOOL", "PROX_TERMINAL", "PROX_HEALTHCARE", "PROX_RAILWAYS")
 col
 ```
 
-
 ```{r}
-dkijkt_covid_updated_xy.mlr = lm(formula = POSITIF ~ JUMLAH_PEN + PROX_ATTRACTION  + PROX_WORSHIP + PROX_RESTAURANT + PROX_MALL  + PROX_SUPERMARKET + PROX_CONVENIENCE  + PROX_KINDERGARTENS  + PROX_SCHOOL  + PROX_TERMINAL  + PROX_HEALTHCARE + PROX_RAILWAYS, data=dkijkt_covid_updated_xy)
-summary(dkijkt_covid_updated_xy.mlr)
+corrplot(cor(jakarte_covid[, col]), diag = FALSE, order = "AOE",
+         tl.pos = "td", tl.cex = 0.5, method = "number", type = "upper")
 ```
 
 ```{r}
-dkijkt_covid_updated_xy.mlr1 = lm(formula = POSITIF ~ JUMLAH_PEN + PROX_RESTAURANT + PROX_TERMINAL, data=dkijkt_covid_updated_xy)
+jakarta_covid.mlr = lm(formula = POSITIF ~ JUMLAH_PEN + PROX_ATTRACTION  + PROX_WORSHIP + PROX_RESTAURANT + PROX_MALL  + PROX_SUPERMARKET + PROX_CONVENIENCE  + PROX_KINDERGARTENS  + PROX_SCHOOL  + PROX_TERMINAL  + PROX_HEALTHCARE + PROX_RAILWAYS, data=jakarta_covid.sf)
+summary(jakarta_covid.mlr)
+```
+
+```{r}
+jakarta_covid.mlr1 = lm(formula = POSITIF ~ JUMLAH_PEN + PROX_RESTAURANT + PROX_TERMINAL, data=jakarta_covid.sf)
 # summary(dkijkt_covid_updated_xy.mlr1)
-ols_regress(dkijkt_covid_updated_xy.mlr1)
+ols_regress(jakarta_covid.mlr1)
 ```
 
 ```{r}
-ols_vif_tol(dkijkt_covid_updated_xy.mlr1)
+ols_vif_tol(jakarta_covid.mlr1)
 ```
 
 ```{r}
-ols_plot_resid_fit(dkijkt_covid_updated_xy.mlr1)
+ols_plot_resid_fit(jakarta_covid.mlr1)
 ```
 
 ```{r}
-ols_plot_resid_hist(dkijkt_covid_updated_xy.mlr1)
+ols_plot_resid_hist(jakarta_covid.mlr1)
 ```
 
 ```{r}
-ols_test_normality(dkijkt_covid_updated_xy.mlr1)
+ols_test_normality(jakarta_covid.mlr1)
 ```
 
 ```{r}
-mlr.output <- as.data.frame(dkijkt_covid_updated_xy.mlr1$residuals)
+mlr.output <- as.data.frame(jakarta_covid.mlr1$residuals)
 ```
 
 ```{r}
-dkijkt_covid_updated_xy.res.sf <- cbind(dkijkt_covid_updated_xy,  dkijkt_covid_updated_xy.mlr1$residuals) %>%
-rename(`MLR_RES` = `dkijkt_covid_updated_xy.mlr1.residuals`)
+jakarta_covid.res.sf <- cbind(jakarta_covid.sf,  jakarta_covid.mlr1$residuals) %>%
+rename(`MLR_RES` = `jakarta_covid.mlr1.residuals`)
 ```
 
 ```{r}
-dkijkt_covid_updated_xy.sp <- as_Spatial(dkijkt_covid_updated_xy.res.sf)
-dkijkt_covid_updated_xy.sp
+jakarta_covid.sp <- as_Spatial(jakarta_covid.res.sf)
+jakarta_covid.sp
 ```
 
 ```{r}
 tmap_mode("view")
 tm_shape(dkijkt_covid)+
   tm_polygons(alpha = 0.4) +
-tm_shape(dkijkt_covid_updated_xy.res.sf) +  
+tm_shape(jakarta_covid.res.sf) +  
   tm_dots(col = "MLR_RES",
           alpha = 0.6,
           style="quantile") +
@@ -853,7 +861,7 @@ tmap_mode("plot")
 ```
 
 ```{r}
-nb <- dnearneigh(coordinates(dkijkt_covid_updated_xy.sp), 0, 3500, longlat = FALSE)
+nb <- dnearneigh(coordinates(jakarta_covid.sp), 0, 3500, longlat = FALSE)
 summary(nb)
 ```
 
@@ -863,15 +871,15 @@ summary(nb_lw)
 ```
 
 ```{r}
-lm.morantest(dkijkt_covid_updated_xy.mlr1, nb_lw)
+lm.morantest(jakarta_covid.mlr1, nb_lw)
 ```
 
 ```{r}
-bw.fixed <- bw.gwr(formula = POSITIF ~ JUMLAH_PEN + PROX_RESTAURANT + PROX_TERMINAL, data=dkijkt_covid_updated_xy.sp, approach="CV", kernel="gaussian", adaptive=FALSE, longlat=FALSE)
+bw.fixed <- bw.gwr(formula = POSITIF ~ JUMLAH_PEN + PROX_RESTAURANT + PROX_TERMINAL, data=jakarta_covid.sp, approach="CV", kernel="gaussian", adaptive=FALSE, longlat=FALSE)
 ```
 
 ```{r}
-gwr.fixed <- gwr.basic(formula = POSITIF ~ JUMLAH_PEN + PROX_RESTAURANT + PROX_TERMINAL, data=dkijkt_covid_updated_xy.sp, bw=bw.fixed, kernel = 'gaussian', longlat = FALSE)
+gwr.fixed <- gwr.basic(formula = POSITIF ~ JUMLAH_PEN + PROX_RESTAURANT + PROX_TERMINAL, data=jakarta_covid.sp, bw=bw.fixed, kernel = 'gaussian', longlat = FALSE)
 ```
 
 ```{r}
@@ -882,14 +890,12 @@ Global adjusted r square: 0.7163
 GWR adjusted r square: 0.7840
 
 ```{r}
-bw.adaptive <- bw.gwr(formula = POSITIF ~ JUMLAH_PEN + PROX_RESTAURANT + PROX_TERMINAL, data=dkijkt_covid_updated_xy.sp, approach="CV", kernel="gaussian",
+bw.adaptive <- bw.gwr(formula = POSITIF ~ JUMLAH_PEN + PROX_RESTAURANT + PROX_TERMINAL, data=jakarta_covid.sp, approach="CV", kernel="gaussian",
 adaptive=TRUE, longlat=FALSE)
 ```
 
-Select bandwith of 18
-
 ```{r}
-gwr.adaptive <- gwr.basic(formula = POSITIF ~ JUMLAH_PEN + PROX_RESTAURANT + PROX_TERMINAL, data=dkijkt_covid_updated_xy.sp, bw=bw.adaptive, kernel = 'gaussian', adaptive=TRUE, longlat = FALSE)
+gwr.adaptive <- gwr.basic(formula = POSITIF ~ JUMLAH_PEN + PROX_RESTAURANT + PROX_TERMINAL, data=jakarta_covid.sp, bw=bw.adaptive, kernel = 'gaussian', adaptive=TRUE, longlat = FALSE)
 ```
 
 ```{r}
@@ -897,22 +903,22 @@ gwr.adaptive
 ```
 
 ```{r}
-dkijkt_covid_updated_xy.adaptive <- st_as_sf(gwr.adaptive$SDF) %>%
+jakarta_covid.adaptive <- st_as_sf(gwr.adaptive$SDF) %>%
   st_transform(crs=23845)
 ```
 
 ```{r}
-dkijkt_covid_updated_xy.adaptive.svy21 <- st_transform(dkijkt_covid_updated_xy.adaptive, 23845)
-dkijkt_covid_updated_xy.adaptive.svy21  
+jakarta_covid.adaptive.svy21 <- st_transform(jakarta_covid.adaptive, 23845)
+jakarta_covid.adaptive.svy21  
 ```
 
 ```{r}
 gwr.adaptive.output <- as.data.frame(gwr.adaptive$SDF)
-dkijkt_covid_updated_xy.adaptive <- cbind(dkijkt_covid_updated_xy.res.sf, as.matrix(gwr.adaptive.output))
+jakarta_covid.adaptive <- cbind(jakarta_covid.res.sf, as.matrix(gwr.adaptive.output))
 ```
 
 ```{r}
-glimpse(dkijkt_covid_updated_xy.adaptive)
+glimpse(jakarta_covid.adaptive)
 ```
 
 ```{r}
@@ -923,7 +929,7 @@ summary(gwr.adaptive$SDF$yhat)
 tmap_mode("view")
 tm_shape(dkijkt_covid)+
   tm_polygons(alpha = 0.1) +
-tm_shape(dkijkt_covid_updated_xy.adaptive) +  
+tm_shape(jakarta_covid.adaptive) +  
   tm_dots(col = "Local_R2",
           border.col = "gray60",
           border.lwd = 1) +
@@ -934,7 +940,7 @@ tmap_mode("plot")
 ```{r}
 tm_shape(dkijkt_covid[dkijkt_covid$KECAMATAN=="CENGKARENG", ])+
   tm_polygons(alpha = 0.1) +
-tm_shape(dkijkt_covid_updated_xy.adaptive) +  
+tm_shape(jakarta_covid.adaptive) +  
   tm_dots(col = "Local_R2",
           border.col = "gray60",
           border.lwd = 1,
