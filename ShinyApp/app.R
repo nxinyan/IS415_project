@@ -10,60 +10,72 @@ library(GWmodel)
 # Define UI for application that draws a histogram
 ui <- fluidPage(
     
-    # Application title
-    titlePanel("Team 5"),
-    
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            
-            # Upload a file
-            fileInput("file1", "Choose a CSV file",
-                      multiple = FALSE,
-                      accept = c(".csv")),
-            selectInput(inputId = "dependent",
-                        label = "Dependent Variable:",
-                        choices = ""),
-            checkboxGroupInput(inputId = "independent",
-                               label = "Independent Variables:",
-                               choices = ""),
-            selectInput(inputId = "bandwidthtf",
-                        label = "Bandwidth:",
-                        choices = list("Fixed" = "Fixed", 
-                                       "Adaptive" = "Adaptive"),
-                        selected = "Fixed"),
-            selectInput(inputId = "approach",
-                        label = "Approach:",
-                        choices = list("Cross Validation" = "CV", 
-                                       "AIC" = "AIC"),
-                        selected = "CV"),
-            selectInput(inputId = "kernel",
-                        label = "Kernel:",
-                        choices = list("Gaussian" = "gaussian", 
-                                       "Exponential" = "exponential", 
-                                       "Bisquare" = "bisquare",
-                                       "Tricube" = "tricube",
-                                       "Boxcar" = "boxcar"),
-                        selected = "gaussian"),
-            selectInput(inputId = "longlattf",
-                        label = "Distances:",
-                        choices = list("Euclidean" = "Euclidean",
-                                       "Great Circle" = "Great Circle"),
-                        selected = "Euclidean"),
-            submitButton("Apply changes"),
-            checkboxInput(inputId = "showData",
-                          label = "Show data table",
-                          value = TRUE)
-        ),
-        
-        # Show a plot of the generated distribution
-        mainPanel(
-            verbatimTextOutput("mlrsummary"),
-            verbatimTextOutput("olsviftol"),
-            verbatimTextOutput("bw"),
-            DT::dataTableOutput("aTable")
-            
-        )
+    navbarPage(title = "Team 5",
+               tabPanel("EDA"),
+               tabPanel("GWR"),
+               tabPanel("Prediction", 
+                        
+                        # Sidebar with a slider input for number of bins 
+                        sidebarLayout(
+                            sidebarPanel(
+                                
+                                # Upload a file
+                                fileInput("file1", "Choose a CSV file",
+                                          multiple = FALSE,
+                                          accept = c(".csv")),
+                                textInput(
+                                    inputId = "crsprojection",
+                                    label = "CRS:",
+                                    placeholder = "Enter CRS"),
+                                submitButton("Update CRS"),
+                                selectInput(inputId = "dependent",
+                                            label = "Dependent Variable:",
+                                            choices = ""),
+                                checkboxGroupInput(inputId = "independent",
+                                                   label = "Independent Variables:",
+                                                   choices = ""),
+                                selectInput(inputId = "bandwidthtf",
+                                            label = "Bandwidth:",
+                                            choices = list("Fixed" = "Fixed", 
+                                                           "Adaptive" = "Adaptive"),
+                                            selected = "Fixed"),
+                                selectInput(inputId = "approach",
+                                            label = "Approach:",
+                                            choices = list("Cross Validation" = "CV", 
+                                                           "AIC" = "AIC"),
+                                            selected = "CV"),
+                                selectInput(inputId = "kernel",
+                                            label = "Kernel:",
+                                            choices = list("Gaussian" = "gaussian", 
+                                                           "Exponential" = "exponential", 
+                                                           "Bisquare" = "bisquare",
+                                                           "Tricube" = "tricube",
+                                                           "Boxcar" = "boxcar"),
+                                            selected = "gaussian"),
+                                selectInput(inputId = "longlattf",
+                                            label = "Distances:",
+                                            choices = list("Euclidean" = "Euclidean",
+                                                           "Great Circle" = "Great Circle"),
+                                            selected = "Euclidean"),
+                                submitButton("Apply changes"),
+                                checkboxInput(inputId = "showData",
+                                              label = "Show data table",
+                                              value = TRUE)
+                            ),
+                            
+                            # Show a plot of the generated distribution
+                            mainPanel(
+                                tabsetPanel(
+                                    tabPanel("Formula", verbatimTextOutput("formula")),
+                                    tabPanel("Summary", verbatimTextOutput("mlrsummary")),
+                                    tabPanel("Multicollinearity", verbatimTextOutput("olsviftol")),
+                                    tabPanel("Prediction", verbatimTextOutput("bw")),
+                                    tabPanel("Visualization", tmapOutput("visualization")),
+                                    tabPanel("Data Table", DT::dataTableOutput("aTable"))
+                                )
+                            )
+                        )
+               )
     )
 )
 
