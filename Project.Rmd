@@ -1,10 +1,17 @@
 ---
 title: "Project"
 description: |
+<<<<<<< HEAD
+  Trying to do EDA
+author:
+  - name: Team 5 
+    url: https://github.com/nxinyan/IS415_project
+=======
   This is our group's project page for the topic on Geographically Weighted Regression
 author:
   - name: Team 5 
     url: ...
+>>>>>>> master
     affiliation: Singapore Management University
     affiliation_url: https://www.smu.edu.sg
 date: "`r Sys.Date()`"
@@ -12,11 +19,25 @@ output: distill::distill_article
 ---
 
 ```{r setup, include=FALSE}
+<<<<<<< HEAD
+knitr::opts_chunk$set(echo = TRUE, 
+                      eval = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.retina = 3)
+```
+
+## Installing and Loading the R packages
+
+```{r}
+packages = c('maptools', 'sf', 'raster','spatstat', 'tmap','tidyverse','rgdal','ggplot2', 'ggthemes', 'plotly')
+=======
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
 packages = c('sf', 'tidyverse', 'readxl', 'tmap', 'raster', 'knitr', 'dplyr', 'olsrr','GWmodel','corrplot','ggpubr', 'spdep')
+>>>>>>> master
 for (p in packages){
   if(!require(p, character.only = T)){
     install.packages(p)
@@ -26,6 +47,72 @@ for (p in packages){
 ```
 
 
+<<<<<<< HEAD
+## Importing Geospatial Data
+
+### Jakarta Layer
+
+```{r echo=TRUE, eval=TRUE}
+jakarta <- st_read(dsn = "data/Geospatial", 
+                    layer = "BATAS_DESA_DESEMBER_2019_DUKCAPIL_DKI_JAKARTA")
+```
+
+Display basic information of the feature class
+
+```{r echo=TRUE, eval=TRUE}
+st_geometry(jakarta)
+```
+
+```{r echo=TRUE, eval=TRUE}
+# Looking at the associated information in the dataframe
+# glimpse(jakarta)
+```
+
+Identifying the different city in Jakarta
+
+```{r echo=TRUE, eval=TRUE}
+tmap_mode('view')
+tm_shape(jakarta)+
+  tm_polygons() +
+tm_shape(jakarta) +
+  tm_fill("KAB_KOTA",
+          palette = "RdYlBu")+
+  tm_borders()
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+=======
 ## COVID DATA
 
 ```{r}
@@ -949,6 +1036,7 @@ tm_shape(jakarta_covid.adaptive) +
 ```
 
 
+>>>>>>> master
 
 
 
