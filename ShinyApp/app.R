@@ -171,7 +171,7 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                       tabsetPanel(
                                           tabPanel("Formula", verbatimTextOutput("formula"),
                                                    HTML("Tips:
-                                                        <br/> This is formula based on the selected dependent and independent variables.")),
+                                                        <br/> This formula is based on the selected dependent and independent variables.")),
                                           tabPanel("Summary", verbatimTextOutput("mlrsummary"), 
                                                    HTML("Tips: 
                                                         <br/> Remove independent variables without asterisk because they are not statistically significant.
