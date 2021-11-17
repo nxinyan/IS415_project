@@ -1,0 +1,62 @@
+---
+title: "User Guide"
+description: |
+  Step-by-step guide on the Regressors (app).
+author:
+  - name: Regressors
+    url: https://g5-is415-proj.netlify.app/
+    affiliation: Singapore Management University
+    affiliation_url: https://www.smu.edu.sg
+date: "`r Sys.Date()`"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+# Data
+
+## Requirements
+
+1. The file has to be **CSV** files
+2. The file has to contain columns of either pair of the geometry as indicated below:
+  - **X** and **Y** columns in metres and must be in WGS84, CRS = 4326 (Example: X = -3627128.977, Y = 692083.5103)
+  - **LAT** and **LONG**  columns in decimal degrees (Example:  LAT = 1.322126589, LONG = 103.8597576)
+3. Dependent and independent variables in numerical format (Example: PROX_ATTRACTION, POSITIF) 
+
+# Data Import
+
+**Data Import will only be available in EDA tab** 
+
+1. Click "Browse..."
+2. Select the csv file
+3. Input the CRS of your dataset's country (Example: SG: 3414, Jakarta: 23845)
+4. Select "Update CRS" (To list out the dependent and independent variables available.)
+
+# EDA
+
+- step
+- screenshots
+
+# GWR
+
+- step
+- screenshots
+
+# Prediction
+
+- step
+- screenshots
+
+
+
+
+
+
+
+
+
+
+
