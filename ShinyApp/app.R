@@ -18,8 +18,45 @@ library(shinythemes)
 options(shiny.maxRequestSize = 30*1024^2)
 
 # Define UI for application that draws a histogram
-ui <- navbarPage("Team 5",
+ui <- navbarPage("Regressor",
                  theme = shinytheme('spacelab'),
+                 tabPanel("About Us",
+                            fluidPage(
+                                sidebarLayout(
+                                    sidebarPanel(
+                                        img(src='logo.jpg', align = "center"),
+                                        h2(strong("GWR by Team 5")),
+                                        tags$ul(
+                                            tags$li("Toh Jun Long", style = "font-size:150%"),
+                                            tags$li("Kwek Yi Chen", style = "font-size:150%"),
+                                            tags$li("Ngah Xin Yan", style = "font-size:150%")
+                                        ),
+                                        h2(strong("Guided by:")),
+                                        tags$li("Professor Kam Tin Seong (SMU IS415)", style = "font-size:150%"),
+                                        width = 3
+                                    ),
+                                    mainPanel(
+                                        h2(strong("Project Motivation")),
+                                        hr(),
+                                        p("COVID-19 has become an indisputable part of our daily life ever since the virus spread to the majority of the world. Some countries have been able to keep the situation under control, however, there are some that suffered more devastating effects from it. India and Indonesia are 2 countries in Asia that have the highest COVID related mortality and positive rates (Worldometers, n.d.) for COVID-19 cases, especially so in the main capital of the respective countries, likely due to certain underlying common factors within the countries.
+
+Researchers claims that Indonesia’s capital, Jakarta, could have as many as 4.7 million people who are possibly infected by the virus in March 2021 (Sood, 2021). This is alarming as this number constitutes to “nearly half” of Jakarta’s population.
+                                          
+We realize the importance of using Geographically Weighted Regression (GWR) to investigate the impact independent variables has on  a dependent variable.", style = "font-size:150%"),
+                                        h2(strong("Objective")),
+                                        hr(),
+                                        p("This application aims to help users to flexibly import their own data and identify the relationship between their selected independent variables, such as proximity to Healthcare facilities and proximity to attraction, and dependent variable, such as Number of positive COVID cases.", style = "font-size:150%"),
+                                        h2(strong("App Functions")),
+                                        hr(),
+                                        tags$ol(
+                                            tags$li(strong("EDA:"), "Visualizing the different variables on Choropleth map and Histogram.", style = "font-size:150%"),
+                                            tags$li(strong("GWR: "),"Build a GWR model based on selected dependent and independent variables, provides analysis on their relationship, thus allowing users to select the best parameters for the GWR base model. Additionally, users are able to visualize the accuracy of the model geographically.", style = "font-size:150%"),
+                                            tags$li(strong("Prediction:"),"A GWR prediction model is built based on selected dependent and independent variables with the dataset provided. The output is the predicted values which will be analyzed and visualized geographically on the interactive map.", style = "font-size:150%")
+                                        )
+                                    )
+                                )
+                                
+                            )),
                  tabPanel("EDA"),
                  tabPanel("GWR",
                           fluidPage(
@@ -309,8 +346,8 @@ server <- function(input, output, session) {
         tmap_mode("view")
         tm_shape(covid_sf) +  
             tm_dots(col = "Local_R2",
-                    border.col = "gray60",
-                    border.lwd = 1) +
+                    border.lwd = 1,
+                    size = 0.05) +
             tm_view(set.zoom.limits = c(10,15)) +
             tm_basemap("OpenStreetMap")
     })
@@ -474,7 +511,8 @@ server <- function(input, output, session) {
         tmap_mode("view")
         tm_shape(covid_sf) +
             tm_dots(col = "prediction",
-                    border.lwd = 1) +
+                    border.lwd = 1,
+                    size = 0.05) +
             tm_view(set.zoom.limits = c(10,15)) +
             tm_basemap("OpenStreetMap")
     })
