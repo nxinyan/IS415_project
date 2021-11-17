@@ -3,8 +3,8 @@ title: "Project Proposal"
 description: |
   This is our group's project proposal for the topic on Geographically Weighted Regression
 author:
-  - name: Team 5 
-    url: https://github.com/JunLonggggg/junlong-is415-website
+  - name: Regressors
+    url: https://g5-is415-proj.netlify.app/
     affiliation: Singapore Management University
     affiliation_url: https://www.smu.edu.sg
 date: "`r Sys.Date()`"
