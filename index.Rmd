@@ -1,5 +1,5 @@
 ---
-title: "IS415 Team 5 Project (GWR)"
+title: "Regressors"
 description: |
   This project will explore the use of Geographically Weighted Regression analysis on region with high COVID infection rate, specifically, Jakarta, the main city of Indonesia.
 site: distill::distill_website
@@ -16,4 +16,30 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```
 
-# Content
+# Project Title
+
+Regressors: Geographically Weighted Regression on Jakarta COVID-19 cases
+
+# Abstract
+
+COVID-19 has become an indisputable part of our daily life ever since the virus spread to the majority of the world. Some countries have been able to keep the situation under control, however, there are some that suffered more devastating effects from it. India and Indonesia are 2 countries in Asia that have the highest COVID related mortality and positive rates for COVID-19 cases, especially so in the main capital of the respective countries, likely due to certain underlying common factors within the countries.
+
+Researchers claims that Indonesia’s capital, Jakarta, could have as many as 4.7 million people who are possibly infected by the virus in March 2021. This is alarming as this number constitutes to “nearly half” of Jakarta’s population.
+                                          
+We realize the importance of using Geographically Weighted Regression (GWR) to investigate the impact independent variables has on  a dependent variable.
+
+This application aims to help users to flexibly import their own data and identify the relationship between their selected independent variables, such as proximity to Healthcare facilities and proximity to attraction, and dependent variable, such as Number of positive COVID cases.
+
+Functions include:
+**Exploratory Data Analysis (EDA):** Visualizing the different variables on Choropleth map and Histogram.
+**GWR:** Build a GWR model based on selected dependent and independent variables, provides analysis on their relationship, thus allowing users to select the best parameters for the GWR base model. Additionally, users are able to visualize the accuracy of the model geographically.
+**GWR Prediction:** A GWR prediction model is built based on selected dependent and independent variables with the dataset provided. The output is the predicted values which will be analyzed and visualized geographically on the interactive map.
+  
+# Links
+
+- [Github](https://github.com/nxinyan/IS415_project)
+- [Project Proposal](ProjectProposal.html)
+- [Poster](...)
+- [Research Paper](...)
+- [User Guide for ShinyApp](UserGuide.html)
+- [ShinyApp.io](...)
