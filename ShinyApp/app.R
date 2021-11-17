@@ -76,7 +76,7 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                                   label = "Dependent Variable:",
                                                   choices = ""),
                                       checkboxGroupInput(inputId = "independentGwr",
-                                                         label = "Independent Variables:",
+                                                         label = "Independent Variables (Select 2 or more):",
                                                          choices = ""),
                                       selectInput(inputId = "bandwidthtfGwr",
                                                   label = "Bandwidth:",
@@ -85,8 +85,8 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                                   selected = "Fixed"),
                                       selectInput(inputId = "approachGwr",
                                                   label = "Approach:",
-                                                  choices = list("Cross Validation" = "CV",
-                                                                 "AIC" = "AIC"),
+                                                  choices = list("Cross Validation (CV)" = "CV",
+                                                                 "Akaike information Criterion (AIC)" = "AIC"),
                                                   selected = "CV"),
                                       selectInput(inputId = "kernelGwr",
                                                   label = "Kernel:",
@@ -97,11 +97,11 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                                                  "Boxcar" = "boxcar"),
                                                   selected = "gaussian"),
                                       selectInput(inputId = "longlattfGwr",
-                                                  label = "Distances:",
+                                                  label = "Distance metric:",
                                                   choices = list("Euclidean" = "Euclidean",
                                                                  "Great Circle" = "Great Circle"),
                                                   selected = "Euclidean"),
-                                      submitButton("Apply changes"),
+                                      submitButton("Run"),
                                       checkboxInput(inputId = "showDataGwr",
                                                     label = "Show data table",
                                                     value = TRUE)
@@ -137,7 +137,7 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                                   label = "Dependent Variable:",
                                                   choices = ""),
                                       checkboxGroupInput(inputId = "independent",
-                                                         label = "Independent Variables:",
+                                                         label = "Independent Variables (Select 2 or more):",
                                                          choices = ""),
                                       selectInput(inputId = "bandwidthtf",
                                                   label = "Bandwidth:",
@@ -146,8 +146,8 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                                   selected = "Fixed"),
                                       selectInput(inputId = "approach",
                                                   label = "Approach:",
-                                                  choices = list("Cross Validation" = "CV",
-                                                                 "AIC" = "AIC"),
+                                                  choices = list("Cross Validation (CV)" = "CV",
+                                                                 "Akaike Information Criterion (AIC)" = "AIC"),
                                                   selected = "CV"),
                                       selectInput(inputId = "kernel",
                                                   label = "Kernel:",
@@ -158,23 +158,41 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                                                  "Boxcar" = "boxcar"),
                                                   selected = "gaussian"),
                                       selectInput(inputId = "longlattf",
-                                                  label = "Distances:",
+                                                  label = "Distance metric:",
                                                   choices = list("Euclidean" = "Euclidean",
                                                                  "Great Circle" = "Great Circle"),
                                                   selected = "Euclidean"),
-                                      submitButton("Apply changes"),
+                                      submitButton("Run"),
                                       checkboxInput(inputId = "showData",
                                                     label = "Show data table",
                                                     value = TRUE)
                                   ),
                                   mainPanel(
                                       tabsetPanel(
-                                          tabPanel("Formula", verbatimTextOutput("formula")),
-                                          tabPanel("Summary", verbatimTextOutput("mlrsummary")),
-                                          tabPanel("Multicollinearity", verbatimTextOutput("olsviftol")),
-                                          tabPanel("Prediction", verbatimTextOutput("bw")),
-                                          tabPanel("Visualization", tmapOutput("visualization")),
-                                          tabPanel("Data Table", DT::dataTableOutput("aTable"))
+                                          tabPanel("Formula", verbatimTextOutput("formula"),
+                                                   HTML("Tips:
+                                                        <br/> This is formula based on the selected dependent and independent variables.")),
+                                          tabPanel("Summary", verbatimTextOutput("mlrsummary"), 
+                                                   HTML("Tips: 
+                                                        <br/> Remove independent variables without asterisk because they are not statistically significant.
+                                                        <br/> R-squared shows how much the model is able to explain the dependent variable.
+                                                        <br/> Example: R-squared of 0.5 means the model is able to explain 50% of the dependent variable.
+                                                        <br/> P-value > significance level = mean is good estimator of the dependent variable.
+                                                        <br/> P-value < significance level = model is good estimator of the dependent variable.")),
+                                          tabPanel("Multicollinearity", verbatimTextOutput("olsviftol"),
+                                                   HTML("Tips: 
+                                                        <br/> Consider removing independent variables with VIF > 10 because it means that there is a sign of multicollinearity.")),
+                                          tabPanel("Prediction Model's Performance", verbatimTextOutput("bw"),
+                                                   HTML("Tips: 
+                                                        <br/> This shows the min, median and max of the predicted value of the dependent variable.")),
+                                          tabPanel("Visualization", tmapOutput("visualization"),
+                                                   HTML("Tips: 
+                                                        <br/> This shows the predicted value of the dependent variable geographically.
+                                                        <br/> Dark red means a higher predicted value of the dependent variable.
+                                                        <br/> Light yellow means a lower predicted value of the dependent variable.")),
+                                          tabPanel("Data Table", DT::dataTableOutput("aTable"),
+                                                   HTML("Tips: 
+                                                        <br/> This shows data of the selected dependent and independent variables."))
                                       )
                                   )
                               )
@@ -354,7 +372,7 @@ server <- function(input, output, session) {
     
     observe({
         updateSelectInput(session, "dependentGwr", label = "Dependent Variable:", choices = names(uploaded_data()))
-        updateCheckboxGroupInput(session, "independentGwr", label = "Independent Variables:", choices = names(uploaded_data()))
+        updateCheckboxGroupInput(session, "independentGwr", label = "Independent Variables (Select 2 or more):", choices = names(uploaded_data()))
     })
     
     # initialdf <- data.frame(names=c("Upload","a","File"))
@@ -519,7 +537,7 @@ server <- function(input, output, session) {
     
     observe({
         updateSelectInput(session, "dependent", label = "Dependent Variable:", choices = names(uploaded_data()))
-        updateCheckboxGroupInput(session, "independent", label = "Independent Variables:", choices = names(uploaded_data()))
+        updateCheckboxGroupInput(session, "independent", label = "Independent Variables (Select 2 or more):", choices = names(uploaded_data()))
     })
     
 }
