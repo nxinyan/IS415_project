@@ -86,7 +86,7 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                       selectInput(inputId = "approachGwr",
                                                   label = "Approach:",
                                                   choices = list("Cross Validation (CV)" = "CV",
-                                                                 "Akaike information Criterion (AIC)" = "AIC"),
+                                                                 "Akaike Information Criterion (AIC)" = "AIC"),
                                                   selected = "CV"),
                                       selectInput(inputId = "kernelGwr",
                                                   label = "Kernel:",
