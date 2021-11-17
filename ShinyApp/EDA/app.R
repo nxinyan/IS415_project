@@ -1,49 +1,44 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
+library(tidyverse)
 
-# Define UI for application that draws a histogram
+exam <- read_csv("data/Exam_data.csv")
+
 ui <- fluidPage(
-
-    # Application title
-    titlePanel("Old Faithful Geyser Data"),
-
-    # Sidebar with a slider input for number of bins 
+    titlePanel("Pupils Examination Results Dashboard"),
     sidebarLayout(
         sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
+            selectInput(inputId = "variable",
+                        label = "Subject:",
+                        choices = c("English" = "ENGLISH",
+                                    "Maths" = "MATHS",
+                                    "Science" = "SCIENCE"),
+                        selected = "ENGLISH"),
+            sliderInput(inputId = "bins",
+                        label = "Number of Bins",
+                        min = 5,
+                        max = 20,
+                        value = 10),
+            checkboxInput(inputId = "show_data", 
+                          label = "Show data table",
+                          value = TRUE) 
         ),
-
-        # Show a plot of the generated distribution
         mainPanel(
-           plotOutput("distPlot")
+            plotOutput(outputId = "distPlot"),
+            DT::dataTableOutput(outputId = "examtable")
         )
+        
     )
 )
 
-# Define server logic required to draw a histogram
-server <- function(input, output) {
-
+server <- function(input, output){
     output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white')
+        x <- unlist(exam[,input$variable])
+        ggplot(exam, aes(x)) + 
+            geom_histogram(bins = input$bins,
+                           color = "black",
+                           fill = "light blue")
+        
     })
 }
 
-# Run the application 
 shinyApp(ui = ui, server = server)
