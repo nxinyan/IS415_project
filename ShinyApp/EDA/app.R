@@ -39,6 +39,14 @@ server <- function(input, output){
                            fill = "light blue")
         
     })
+    output$examtable <- DT::renderDataTable({
+        if(input$show_data){
+            DT::datatable(data = exame %>%
+                              select(1:7),
+                          options = list(pageLength=10),
+                          rownames = FALSE)
+        }
+    })
 }
 
 shinyApp(ui = ui, server = server)
