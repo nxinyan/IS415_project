@@ -14,6 +14,7 @@ library(tidyverse)
 library(readr)
 library(olsrr)
 library(GWmodel)
+library(corrplot)
 library(shinythemes)
 options(shiny.maxRequestSize = 30*1024^2)
 
@@ -38,18 +39,18 @@ ui <- navbarPage("Regressors",
                                     mainPanel(
                                         h2(strong("Project Motivation")),
                                         hr(),
-                                        p("COVID-19 has become an indisputable part of our daily life ever since the virus spread to the majority of the world. Some countries have been able to keep the situation under control, however, there are some that suffered more devastating effects from it. India and Indonesia are 2 countries in Asia that have the highest COVID related mortality and positive rates for COVID-19 cases, especially so in the main capital of the respective countries, likely due to certain underlying common factors within the countries.
+                                        span("COVID-19 has become an indisputable part of our daily life ever since the virus spread to the majority of the world. Some countries have been able to keep the situation under control, however, there are some that suffered more devastating effects from it. India and Indonesia are 2 countries in Asia that have the highest COVID related mortality and positive rates for COVID-19 cases, especially so in the main capital of the respective countries, likely due to certain underlying common factors within the countries.
 
 Researchers claims that Indonesia’s capital, Jakarta, could have as many as 4.7 million people who are possibly infected by the virus in March 2021. This is alarming as this number constitutes to “nearly half” of Jakarta’s population.
                                           
-We realize the importance of using Geographically Weighted Regression (GWR) to investigate the impact independent variables has on  a dependent variable.", style = "font-size:150%"),
+We realize the importance of using ", style = "font-size:150%"), span("Geographically Weighted Regression (GWR)", style = "font-size:150%; font-weight:bold;"), span("to investigate the impact independent variables has on  a dependent variable.", style = "font-size:150%"),
                                         h2(strong("Objective")),
                                         hr(),
                                         p("This application aims to help users to flexibly import their own data and identify the relationship between their selected independent variables, such as proximity to Healthcare facilities and proximity to attraction, and dependent variable, such as Number of positive COVID cases.", style = "font-size:150%"),
                                         h2(strong("App Functions")),
                                         hr(),
                                         tags$ol(
-                                            tags$li(strong("Exploratory Data Analysis (EDA):"), "Visualizing the different variables on Choropleth map and Histogram.", style = "font-size:150%"),
+                                            tags$li(strong("Exploratory Data Analysis (EDA):"), "Visualizing the different variables on Spatial Point map and Histogram.", style = "font-size:150%"),
                                             tags$li(strong("GWR: "),"Build a GWR model based on selected dependent and independent variables, provides analysis on their relationship, thus allowing users to select the best parameters for the GWR base model. Additionally, users are able to visualize the accuracy of the model geographically.", style = "font-size:150%"),
                                             tags$li(strong("GWR Prediction:"),"A GWR prediction model is built based on selected dependent and independent variables with the dataset provided. The output is the predicted values which will be analyzed and visualized geographically on the interactive map.", style = "font-size:150%")
                                         )
@@ -57,27 +58,113 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                 )
                                 
                             )),
-                 tabPanel("EDA"),
+                 tabPanel("EDA",
+                            fluidPage(
+                              sidebarLayout(
+                                  sidebarPanel( 
+                                      # Upload a file
+                                      fileInput("file1Gwr", "Choose a CSV file",
+                                              multiple = FALSE,
+                                             accept = c(".csv")),
+                                      textInput(
+                                         inputId = "crsprojection",
+                                         label = "Coordinate Reference System (CRS)",
+                                          placeholder = "Enter CRS (e.g. Singapore SVY21 = 3414)"),
+                                      submitButton("Update CRS"),
+                                      h5(),
+                                      selectInput(inputId = "allvariables",
+                                                  label = "Variable:",
+                                                  choices = ""),
+                                      h3("Spatial Point Map"),
+                                      selectInput(inputId = "classmethod",
+                                                  label = "Classification Method:",
+                                                  choices = list("Bclust" = "bclust",
+                                                                 "Fisher" = "fisher",
+                                                                 "Equal" = "equal",
+                                                                 "Fixed" = "fixed",
+                                                                 "Hclust" = "hclust",
+                                                                 "Jenks" = "jenks",
+                                                                 "Kmeans" = "kmeans",
+                                                                 "Pretty" = "pretty",
+                                                                 "Quantile" = "quantile",
+                                                                 "sd" = "sd"),
+                                                  selected = "jenks"),
+                                      h3("Histogram"),
+                                      sliderInput(inputId = "bins",
+                                                  label = "Number of Bins:",
+                                                  min = 5,
+                                                  max = 20,
+                                                  value = 10),
+                                      selectInput(inputId = "fill",
+                                                  label = "Histogram Fill:",
+                                                  choices = list("Blue" = "light blue",
+                                                                 "Red" = "red",
+                                                                 "Green" = "green",
+                                                                 "Yellow" = "yellow",
+                                                                 "Purple" = "purple"),
+                                                  selected = "Blue"),
+                                      submitButton("Run"),
+                                      checkboxInput(inputId = "showData",
+                                                    label = "Show data table",
+                                                    value = TRUE)
+                                  ),
+                                  mainPanel(
+                                      tabsetPanel(
+                                          tabPanel("Spatial Point Map", tmapOutput("choromap"),
+                                                   HTML("Tips:
+                                                        <br/> The Spatial Point map plots the selected variable. 
+                                                        <br/> If a categorical variable is selected, refer to the legend.
+                                                        <br/> For numerical variables, the darker the colour of the spatial point, the higher the value of the variable.
+                                                        ")),
+                                          tabPanel("Histogram", plotOutput("histogram"),
+                                          HTML("Tips:
+                                                        <br/> Histogram plots the distribution of the data.
+                                                        <br/> Skewness of the data can also be inferred from the graph.
+                                                        <br/> The number of bins is to help group the data according to the values.
+                                                        ")),
+                                          tabPanel("Data Table", DT::dataTableOutput(outputId = "aTableEDA"),
+                                                   HTML("Tips: 
+                                                        <br/> This shows data of the selected variable."))
+                                      )
+                                  )
+                               )
+                            )  
+                          ),
                  tabPanel("GWR",
                           fluidPage(
                               sidebarLayout(
                                   sidebarPanel(
-                                      
-                                      # Upload a file
-                                      fileInput("file1Gwr", "Choose a CSV file",
-                                                multiple = FALSE,
-                                                accept = c(".csv")),
-                                      textInput(
-                                          inputId = "crsprojection",
-                                          label = "CRS:",
-                                          placeholder = "Enter CRS"),
-                                      submitButton("Update CRS"),
                                       selectInput(inputId = "dependentGwr",
                                                   label = "Dependent Variable:",
                                                   choices = ""),
                                       checkboxGroupInput(inputId = "independentGwr",
                                                          label = "Independent Variables:",
                                                          choices = ""),
+                                      h3("Correlation Plot"),
+                                      selectInput(inputId = "corrorderGwr",
+                                                  label = "Order:",
+                                                  choices = list("AOE" = "AOE",
+                                                                 "FPC" = "FPC",
+                                                                 "hclust" = "hclust",
+                                                                 "alphabet" = "alphabet"),
+                                                  selected = "AOE"),
+                                      selectInput(inputId = "corrmethodGwr",
+                                                  label = "Method:",
+                                                  choices = list("circle" = "circle",
+                                                                 "square" = "square",
+                                                                 "ellipse" = "ellipse",
+                                                                 "number" = "number",
+                                                                 "shade" = "shade",
+                                                                 "color" = "color",
+                                                                 "pie" = "pie"),
+                                                  selected = "circle"),
+                                      selectInput(inputId = "corrtypeGwr",
+                                                  label = "Type:",
+                                                  choices = list("full" = "full",
+                                                                 "upper" = "upper",
+                                                                 "lower" = "lower"),
+                                                  selected = "full"),
+                                      h3("Model"),
                                       selectInput(inputId = "bandwidthtfGwr",
                                                   label = "Bandwidth:",
                                                   choices = list("Fixed" = "Fixed",
@@ -85,8 +172,8 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                                   selected = "Fixed"),
                                       selectInput(inputId = "approachGwr",
                                                   label = "Approach:",
-                                                  choices = list("Cross Validation" = "CV",
-                                                                 "AIC" = "AIC"),
+                                                  choices = list("Cross Validation (CV)" = "CV",
+                                                                 "Akaike Information Criterion (AIC)" = "AIC"),
                                                   selected = "CV"),
                                       selectInput(inputId = "kernelGwr",
                                                   label = "Kernel:",
@@ -97,23 +184,59 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                                                  "Boxcar" = "boxcar"),
                                                   selected = "gaussian"),
                                       selectInput(inputId = "longlattfGwr",
-                                                  label = "Distances:",
+                                                  label = "Distance metric:",
                                                   choices = list("Euclidean" = "Euclidean",
                                                                  "Great Circle" = "Great Circle"),
                                                   selected = "Euclidean"),
-                                      submitButton("Apply changes"),
+                                      submitButton("Run"),
                                       checkboxInput(inputId = "showDataGwr",
                                                     label = "Show data table",
                                                     value = TRUE)
                                   ),
                                   mainPanel(
                                       tabsetPanel(
-                                          tabPanel("Formula", verbatimTextOutput("formulaGwr")),
-                                          tabPanel("Summary", verbatimTextOutput("mlrsummaryGwr")),
-                                          tabPanel("Multicollinearity", verbatimTextOutput("olsviftolGwr")),
-                                          tabPanel("Base Model's Performance", verbatimTextOutput("bwGwr")),
-                                          tabPanel("Visualization", tmapOutput("visualizationGwr")),
-                                          tabPanel("Data Table", DT::dataTableOutput("aTableGwr"))
+                                          tabPanel("Formula", verbatimTextOutput("formulaGwr"),
+                                                   HTML("Tips:
+                                                        <br/> This formula is based on the selected dependent and independent variables.")),
+                                          tabPanel("Correlation Plot", plotOutput("corrGwr"),
+                                                   HTML("Tips:
+                                                        <br/> This plot visualize the correlation between the selected variables. 
+                                                        <br/> The plot requires selection of at least 2 independent variables.
+                                                        <br/> Variables that are high correlated to another variable should be removed.
+                                                        <br/> Example: A correlation value that is larger than 0.75 can be considered to be highly correlated to each other")),
+                                          tabPanel("Summary", verbatimTextOutput("mlrsummaryGwr"), 
+                                                   HTML("Tips: 
+                                                        <br/> Signifance level is based on user's hypothesis and the respective alpha value.
+                                                        <br/> Remove independent variables based on the p-value and the selected significance level.
+                                                        <br/> R-squared shows how much the model is able to explain the dependent variable.
+                                                        <br/> Example: R-squared of 0.5 means the model is able to explain 50% of the dependent variable.
+                                                        <br/> P-value > significance level = mean is good estimator of the dependent variable.
+                                                        <br/> P-value < significance level = model is good estimator of the dependent variable.")),
+                                          tabPanel("Multicollinearity", verbatimTextOutput("olsviftolGwr"), 
+                                                   HTML("Tips: 
+                                                        <br/> A VIF value > 10 should be removed, as it indicates multicollinearity.
+                                                        <br/> The analysis requires selection of at least 2 independent variables.")),
+                                          tabPanel("Linearity", plotOutput("olsplotresidfitGwr"), 
+                                                   HTML("Tips: 
+                                                        <br/> The plot shows the distribution of residuals along the Zero line.
+                                                        <br/> A good indication of linearity is to have clusters near the Zero line.")),
+                                          tabPanel("Normality", plotOutput("olsplotresidhistGwr"), 
+                                                   HTML("Tips: 
+                                                        <br/> The plot shows the distribution of residuals.
+                                                        <br/> A good indication of normality is to have a normal curve.")),
+                                          tabPanel("Base Model's Performance", verbatimTextOutput("bwGwr"),
+                                                   HTML("Tips: 
+                                                        <br/> This shows the R-squared values of the global regression and the GWR model.
+                                                        <br/> R-squared shows how much the model is able to explain the dependent variable.
+                                                        <br/> Example: R-squared of 0.5 means the model is able to explain 50% of the dependent variable.")),
+                                          tabPanel("Visualization", tmapOutput("visualizationGwr"),
+                                                   HTML("Tips: 
+                                                        <br/> This shows the local_R2 value GWR model geographically.
+                                                        <br/> Darker shade means a higher local_R2 value and indicates better performance for that region.
+                                                        <br/> Lighter shade means a lower local_R2 value and indicates poorer performance for that region.")),
+                                          tabPanel("Data Table", DT::dataTableOutput("aTableGwr"),
+                                                   HTML("Tips: 
+                                                        <br/> This shows data of the selected dependent and independent variables."))
                                       )
                                   )
                               )
@@ -123,22 +246,13 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                           fluidPage(
                               sidebarLayout(
                                   sidebarPanel(
-                                      
-                                      # # Upload a file
-                                      # fileInput("file1", "Choose a CSV file",
-                                      #           multiple = FALSE,
-                                      #           accept = c(".csv")),
-                                      # textInput(
-                                      #     inputId = "crsprojection",
-                                      #     label = "CRS:",
-                                      #     placeholder = "Enter CRS"),
-                                      # submitButton("Update CRS"),
                                       selectInput(inputId = "dependent",
                                                   label = "Dependent Variable:",
                                                   choices = ""),
                                       checkboxGroupInput(inputId = "independent",
                                                          label = "Independent Variables:",
                                                          choices = ""),
+                                      h3("Model"),
                                       selectInput(inputId = "bandwidthtf",
                                                   label = "Bandwidth:",
                                                   choices = list("Fixed" = "Fixed",
@@ -146,8 +260,8 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                                   selected = "Fixed"),
                                       selectInput(inputId = "approach",
                                                   label = "Approach:",
-                                                  choices = list("Cross Validation" = "CV",
-                                                                 "AIC" = "AIC"),
+                                                  choices = list("Cross Validation (CV)" = "CV",
+                                                                 "Akaike Information Criterion (AIC)" = "AIC"),
                                                   selected = "CV"),
                                       selectInput(inputId = "kernel",
                                                   label = "Kernel:",
@@ -158,23 +272,39 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                                                  "Boxcar" = "boxcar"),
                                                   selected = "gaussian"),
                                       selectInput(inputId = "longlattf",
-                                                  label = "Distances:",
+                                                  label = "Distance metric:",
                                                   choices = list("Euclidean" = "Euclidean",
                                                                  "Great Circle" = "Great Circle"),
                                                   selected = "Euclidean"),
-                                      submitButton("Apply changes"),
+                                      submitButton("Run"),
                                       checkboxInput(inputId = "showData",
                                                     label = "Show data table",
                                                     value = TRUE)
                                   ),
                                   mainPanel(
                                       tabsetPanel(
-                                          tabPanel("Formula", verbatimTextOutput("formula")),
-                                          tabPanel("Summary", verbatimTextOutput("mlrsummary")),
-                                          tabPanel("Multicollinearity", verbatimTextOutput("olsviftol")),
-                                          tabPanel("Prediction", verbatimTextOutput("bw")),
-                                          tabPanel("Visualization", tmapOutput("visualization")),
-                                          tabPanel("Data Table", DT::dataTableOutput("aTable"))
+                                          tabPanel("Formula", verbatimTextOutput("formula"),
+                                                   HTML("Tips:
+                                                        <br/> This formula is based on the selected dependent and independent variables.")),
+                                          tabPanel("Summary", verbatimTextOutput("mlrsummary"), 
+                                                   HTML("Tips: 
+                                                        <br/> Signifance level is based on user's hypothesis and the respective alpha value.
+                                                        <br/> Remove independent variables based on the p-value and the selected significance level.
+                                                        <br/> R-squared shows how much the model is able to explain the dependent variable.
+                                                        <br/> Example: R-squared of 0.5 means the model is able to explain 50% of the dependent variable.
+                                                        <br/> P-value > significance level = mean is good estimator of the dependent variable.
+                                                        <br/> P-value < significance level = model is good estimator of the dependent variable.")),
+                                          tabPanel("Prediction Model's Performance", verbatimTextOutput("bw"),
+                                                   HTML("Tips: 
+                                                        <br/> This shows the min, median and max of the predicted value of the dependent variable.")),
+                                          tabPanel("Visualization", tmapOutput("visualization"),
+                                                   HTML("Tips: 
+                                                        <br/> This shows the predicted value of the dependent variable geographically.
+                                                        <br/> Darker shade means a higher predicted value of the dependent variable.
+                                                        <br/> Light shade means a lower predicted value of the dependent variable.")),
+                                          tabPanel("Data Table", DT::dataTableOutput("aTable"),
+                                                   HTML("Tips: 
+                                                        <br/> This shows data of the selected dependent and independent variables."))
                                       )
                                   )
                               )
@@ -187,19 +317,6 @@ server <- function(input, output, session) {
     initialdf <- data.frame(names=c("Upload","a","File"))
     
     uploaded_data <- reactive({
-        # if(!(is.null(req(input$file1Gwr)))) {
-        #     req(input$file1Gwr)
-        #     inFile <- input$file1Gwr
-        # } else if (!(is.null(req(input$file1)))) {
-        #     req(input$file1)
-        #     inFile <- input$file1
-        # }
-        # if(!(is.null(req(input$crsprojection)))) {
-        #     crsValue = as.numeric(req(input$crsprojection))
-        # } else if (!(is.null(req(input$crsprojectionGwr)))) {
-        #     crsValue = as.numeric(req(input$crsprojectionGwr))
-        #     print(crsValue)
-        # }
         req(input$file1Gwr)
         inFile <- input$file1Gwr
         if (is.null(inFile)) {
@@ -217,6 +334,62 @@ server <- function(input, output, session) {
                     st_transform(crs=as.numeric(req(input$crsprojection)))
             }
         }
+    })
+    
+    uploaded_data_original <- reactive({
+        req(input$file1Gwr)
+        inFile <- input$file1Gwr
+        if (is.null(inFile)) {
+            uploaded_data <- initialdf
+        } else {
+            dkijkt_covid <- read_csv(inFile$datapath)
+        }
+    })
+    
+    output$aTableEDA <- DT::renderDataTable({
+        input$submitButton
+        
+        req(input$allvariables)
+        
+        if(input$showData){
+            req(input$allvariables)
+            DT::datatable(data = uploaded_data() %>%
+                              dplyr::select(input$allvariables),
+                          options= list(pageLength = 5),
+                          rownames = FALSE)
+        }
+    })
+    
+    output$choromap <- renderTmap({
+        req(input$allvariables)
+        
+        input$submitButton
+        covid_sf <- uploaded_data()
+        tmap_mode("view")
+        tm_shape(covid_sf) +  
+            tm_dots(col = input$allvariables,
+                    alpha = 0.6,
+                    style=input$classmethod,
+                    size = 0.05) +
+            tm_view(set.zoom.limits = c(10,15))+
+            tm_basemap("OpenStreetMap")
+    })
+    
+    output$histogram <- renderPlot({
+        req(input$allvariables)
+        req(input$bins)
+        req(input$fill)
+        
+        columndata <- as.numeric(uploaded_data()[[input$allvariables]])
+        column_name <- as.character(input$allvariables)
+        
+        ggplot(uploaded_data(), aes(x = columndata)) + 
+            geom_histogram(bins = input$bins, color="black", fill=input$fill) +
+            labs(title = paste("Histogram of", column_name), x=column_name)
+    })
+    
+    observe({
+        updateSelectInput(session, "allvariables", label = "Variable:", choices = names(uploaded_data()))
     })
     
     output$aTableGwr <- DT::renderDataTable({
@@ -237,6 +410,22 @@ server <- function(input, output, session) {
         
         formula = paste(input$dependentGwr, "~", paste(input$independentGwr, collapse= " + "))
         paste("Formula: ", formula)
+    })
+    
+    output$corrGwr <- renderPlot({
+        req(input$independentGwr)
+        req(input$corrorderGwr)
+        req(input$corrmethodGwr)
+        req(input$corrtypeGwr)
+        
+        
+        col <- input$independentGwr
+        
+        selecteddata <- uploaded_data_original() %>% dplyr::select(input$independentGwr)
+        selecteddata[col] <- sapply(selecteddata[col], as.numeric)
+        
+        corrplot(cor(selecteddata), diag = TRUE, order = input$corrorderGwr,
+                  tl.cex = 0.8, method = input$corrmethodGwr, type = input$corrtypeGwr)
     })
     
     mlrsummaryGwr <- reactive({
@@ -261,6 +450,30 @@ server <- function(input, output, session) {
     
     output$olsviftolGwr <- renderPrint({
         olsviftolGwr()
+    })
+    
+    olsplotresidfitGwr <- reactive({
+        req(input$dependentGwr)
+        req(input$independentGwr)
+        
+        formula_reactive = as.formula(paste(input$dependentGwr, " ~ ", paste(input$independentGwr, collapse= "+")))
+        ols_plot_resid_fit(stats::lm(formula=formula_reactive, data=uploaded_data()))
+    })
+    
+    output$olsplotresidfitGwr <- renderPlot({
+        olsplotresidfitGwr()
+    })
+    
+    olsplotresidhistGwr <- reactive({
+        req(input$dependentGwr)
+        req(input$independentGwr)
+        
+        formula_reactive = as.formula(paste(input$dependentGwr, " ~ ", paste(input$independentGwr, collapse= "+")))
+        ols_plot_resid_hist(stats::lm(formula=formula_reactive, data=uploaded_data()))
+    })
+    
+    output$olsplotresidhistGwr <- renderPlot({
+        olsplotresidhistGwr()
     })
     
     bwGwr <- reactive ({
@@ -357,31 +570,6 @@ server <- function(input, output, session) {
         updateCheckboxGroupInput(session, "independentGwr", label = "Independent Variables:", choices = names(uploaded_data()))
     })
     
-    # initialdf <- data.frame(names=c("Upload","a","File"))
-    # 
-    # uploaded_data <- reactive({
-    #     req(input$file1)
-    #     
-    #     inFile <- input$file1
-    #     if (is.null(inFile)) {
-    #         uploaded_data <- initialdf
-    #     } else {
-    #         req(input$crsprojection)
-    #         
-    #         dkijkt_covid <- read_csv(inFile$datapath)
-    #         # if lat in dd
-    #         if ("X" %in% colnames(dkijkt_covid)) {
-    #             dkijkt_covid_sf <- st_as_sf(dkijkt_covid,
-    #                                         coords = c("X", "Y"),
-    #                                         crs=as.numeric(input$crsprojection))
-    #         } else if ("LAT" %in% colnames(dkijkt_covid)) {
-    #             dkijkt_covid_sf <- st_as_sf(dkijkt_covid,
-    #                                         coords = c("LONG", "LAT"),
-    #                                         crs=4326) %>% 
-    #                 st_transform(crs=as.numeric(input$crsprojection))
-    #         }
-    #     }
-    # })
     
     output$aTable <- DT::renderDataTable({
         if(input$showData){
@@ -413,18 +601,6 @@ server <- function(input, output, session) {
     
     output$mlrsummary <- renderPrint({
         mlrsummary()
-    })
-    
-    olsviftol <- reactive({
-        req(input$dependent)
-        req(input$independent)
-        
-        formula_reactive = as.formula(paste(input$dependent, " ~ ", paste(input$independent, collapse= "+")))
-        ols_vif_tol(stats::lm(formula=formula_reactive, data=uploaded_data()))
-    })
-    
-    output$olsviftol <- renderPrint({
-        olsviftol()
     })
     
     bw <- reactive ({

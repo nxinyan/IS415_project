@@ -39,7 +39,7 @@ Functions include:
 
 - [Github](https://github.com/nxinyan/IS415_project)
 - [Project Proposal](ProjectProposal.html)
-- [Poster](...)
-- [Research Paper](...)
+- [Poster](poster.html)
+- [Research Paper](./Research\ Paper/Research_Paper.pdf)
 - [User Guide for ShinyApp](UserGuide.html)
-- [ShinyApp.io](...)
+- [ShinyApp.io](https://junlong-toh-2019-is415.shinyapps.io/Regressors)
