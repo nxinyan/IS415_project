@@ -1,0 +1,14 @@
+name: Regressors
+title: Regressors
+username:
+account: junlong-toh-2019-is415
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5156291
+bundleId: 5266852
+url: https://junlong-toh-2019-is415.shinyapps.io/Regressors/
+when: 1637250035.14483
+lastSyncTime: 1637250035.14483
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: EDA/app.R|GWR/app.R|GWR_predict/app.R
