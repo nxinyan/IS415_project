@@ -110,9 +110,21 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                   ),
                                   mainPanel(
                                       tabsetPanel(
-                                          tabPanel("Choropleth Map", tmapOutput("choromap")),
-                                          tabPanel("Histogram", plotOutput("histogram")),
-                                          tabPanel("Data Table", DT::dataTableOutput(outputId = "aTableEDA"))
+                                          tabPanel("Choropleth Map", tmapOutput("choromap"),
+                                                   HTML("Tips:
+                                                        <br/> The choropleth map plots the selected variable. 
+                                                        <br/> If a categorical variable is selected, refer to the legend.
+                                                        <br/> For numerical variables, the darker the colour of the spatial point, the higher the value of the variable.
+                                                        ")),
+                                          tabPanel("Histogram", plotOutput("histogram"),
+                                          HTML("Tips:
+                                                        <br/> Histogram plots the distribution of the data.
+                                                        <br/> Skewness of the data can also be inferred from the graph.
+                                                        <br/> The number of bins is to help group the data according to the values.
+                                                        ")),
+                                          tabPanel("Data Table", DT::dataTableOutput(outputId = "aTableEDA"),
+                                                   HTML("Tips: 
+                                                        <br/> This shows data of the selected variable."))
                                       )
                                   )
                                )
@@ -122,21 +134,11 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                           fluidPage(
                               sidebarLayout(
                                   sidebarPanel(
-                                      
-                                      # Upload a file
-                                      # fileInput("file1Gwr", "Choose a CSV file",
-                                        #        multiple = FALSE,
-                                         #       accept = c(".csv")),
-                                      #textInput(
-                                       #   inputId = "crsprojection",
-                                        #  label = "CRS:",
-                                         # placeholder = "Enter CRS"),
-                                      #submitButton("Update CRS"),
                                       selectInput(inputId = "dependentGwr",
                                                   label = "Dependent Variable:",
                                                   choices = ""),
                                       checkboxGroupInput(inputId = "independentGwr",
-                                                         label = "Independent Variables (Select 2 or more):",
+                                                         label = "Independent Variables:",
                                                          choices = ""),
                                       h3("Correlation Plot"),
                                       selectInput(inputId = "corrorderGwr",
@@ -193,15 +195,48 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                   ),
                                   mainPanel(
                                       tabsetPanel(
-                                          tabPanel("Formula", verbatimTextOutput("formulaGwr")),
-                                          tabPanel("Correlation Plot", plotOutput("corrGwr")),
-                                          tabPanel("Summary", verbatimTextOutput("mlrsummaryGwr")),
-                                          tabPanel("Multicollinearity", verbatimTextOutput("olsviftolGwr")),
-                                          tabPanel("Linearity", plotOutput("olsplotresidfitGwr")),
-                                          tabPanel("Normality", plotOutput("olsplotresidhistGwr")),
-                                          tabPanel("Base Model's Performance", verbatimTextOutput("bwGwr")),
-                                          tabPanel("Visualization", tmapOutput("visualizationGwr")),
-                                          tabPanel("Data Table", DT::dataTableOutput("aTableGwr"))
+                                          tabPanel("Formula", verbatimTextOutput("formulaGwr"),
+                                                   HTML("Tips:
+                                                        <br/> This formula is based on the selected dependent and independent variables.")),
+                                          tabPanel("Correlation Plot", plotOutput("corrGwr"),
+                                                   HTML("Tips:
+                                                        <br/> This plot visualize the correlation between the selected variables. 
+                                                        <br/> The plot requires selection of at least 2 independent variables.
+                                                        <br/> Variables that are high correlated to another variable should be removed.
+                                                        <br/> Example: A correlation value that is larger than 0.75 can be considered to be highly correlated to each other")),
+                                          tabPanel("Summary", verbatimTextOutput("mlrsummaryGwr"), 
+                                                   HTML("Tips: 
+                                                        <br/> Signifance level is based on user's hypothesis and the respective alpha value.
+                                                        <br/> Remove independent variables based on the p-value and the selected significance level.
+                                                        <br/> R-squared shows how much the model is able to explain the dependent variable.
+                                                        <br/> Example: R-squared of 0.5 means the model is able to explain 50% of the dependent variable.
+                                                        <br/> P-value > significance level = mean is good estimator of the dependent variable.
+                                                        <br/> P-value < significance level = model is good estimator of the dependent variable.")),
+                                          tabPanel("Multicollinearity", verbatimTextOutput("olsviftolGwr"), 
+                                                   HTML("Tips: 
+                                                        <br/> A VIF value > 10 should be removed, as it indicates multicollinearity.
+                                                        <br/> The analysis requires selection of at least 2 independent variables.")),
+                                          tabPanel("Linearity", plotOutput("olsplotresidfitGwr"), 
+                                                   HTML("Tips: 
+                                                        <br/> The plot shows the distribution of residuals along the Zero line.
+                                                        <br/> A good indication of linearity is to have clusters near the Zero line.")),
+                                          tabPanel("Normality", plotOutput("olsplotresidhistGwr"), 
+                                                   HTML("Tips: 
+                                                        <br/> The plot shows the distribution of residuals.
+                                                        <br/> A good indication of normality is to have a normal curve.")),
+                                          tabPanel("Base Model's Performance", verbatimTextOutput("bwGwr"),
+                                                   HTML("Tips: 
+                                                        <br/> This shows the R-squared values of the global regression and the GWR model.
+                                                        <br/> R-squared shows how much the model is able to explain the dependent variable.
+                                                        <br/> Example: R-squared of 0.5 means the model is able to explain 50% of the dependent variable.")),
+                                          tabPanel("Visualization", tmapOutput("visualizationGwr"),
+                                                   HTML("Tips: 
+                                                        <br/> This shows the local_R2 value GWR model geographically.
+                                                        <br/> Dark red means a higher local_R2 value and indicates better performance for that region.
+                                                        <br/> Light yellow means a lower local_R2 value and indicates poorer performance for that region.")),
+                                          tabPanel("Data Table", DT::dataTableOutput("aTableGwr"),
+                                                   HTML("Tips: 
+                                                        <br/> This shows data of the selected dependent and independent variables."))
                                       )
                                   )
                               )
@@ -211,21 +246,11 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                           fluidPage(
                               sidebarLayout(
                                   sidebarPanel(
-                                      
-                                      # # Upload a file
-                                      # fileInput("file1", "Choose a CSV file",
-                                      #           multiple = FALSE,
-                                      #           accept = c(".csv")),
-                                      # textInput(
-                                      #     inputId = "crsprojection",
-                                      #     label = "CRS:",
-                                      #     placeholder = "Enter CRS"),
-                                      # submitButton("Update CRS"),
                                       selectInput(inputId = "dependent",
                                                   label = "Dependent Variable:",
                                                   choices = ""),
                                       checkboxGroupInput(inputId = "independent",
-                                                         label = "Independent Variables (Select 2 or more):",
+                                                         label = "Independent Variables:",
                                                          choices = ""),
                                       h3("Model"),
                                       selectInput(inputId = "bandwidthtf",
@@ -263,7 +288,8 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                                         <br/> This formula is based on the selected dependent and independent variables.")),
                                           tabPanel("Summary", verbatimTextOutput("mlrsummary"), 
                                                    HTML("Tips: 
-                                                        <br/> Remove independent variables without asterisk because they are not statistically significant.
+                                                        <br/> Signifance level is based on user's hypothesis and the respective alpha value.
+                                                        <br/> Remove independent variables based on the p-value and the selected significance level.
                                                         <br/> R-squared shows how much the model is able to explain the dependent variable.
                                                         <br/> Example: R-squared of 0.5 means the model is able to explain 50% of the dependent variable.
                                                         <br/> P-value > significance level = mean is good estimator of the dependent variable.
@@ -291,19 +317,6 @@ server <- function(input, output, session) {
     initialdf <- data.frame(names=c("Upload","a","File"))
     
     uploaded_data <- reactive({
-        # if(!(is.null(req(input$file1Gwr)))) {
-        #     req(input$file1Gwr)
-        #     inFile <- input$file1Gwr
-        # } else if (!(is.null(req(input$file1)))) {
-        #     req(input$file1)
-        #     inFile <- input$file1
-        # }
-        # if(!(is.null(req(input$crsprojection)))) {
-        #     crsValue = as.numeric(req(input$crsprojection))
-        # } else if (!(is.null(req(input$crsprojectionGwr)))) {
-        #     crsValue = as.numeric(req(input$crsprojectionGwr))
-        #     print(crsValue)
-        # }
         req(input$file1Gwr)
         inFile <- input$file1Gwr
         if (is.null(inFile)) {
@@ -356,7 +369,8 @@ server <- function(input, output, session) {
         tm_shape(covid_sf) +  
             tm_dots(col = input$allvariables,
                     alpha = 0.6,
-                    style=input$classmethod) +
+                    style=input$classmethod,
+                    size = 0.05) +
             tm_view(set.zoom.limits = c(10,15))+
             tm_basemap("OpenStreetMap")
     })
@@ -553,34 +567,9 @@ server <- function(input, output, session) {
     
     observe({
         updateSelectInput(session, "dependentGwr", label = "Dependent Variable:", choices = names(uploaded_data()))
-        updateCheckboxGroupInput(session, "independentGwr", label = "Independent Variables (Select 2 or more):", choices = names(uploaded_data()))
+        updateCheckboxGroupInput(session, "independentGwr", label = "Independent Variables:", choices = names(uploaded_data()))
     })
     
-    # initialdf <- data.frame(names=c("Upload","a","File"))
-    # 
-    # uploaded_data <- reactive({
-    #     req(input$file1)
-    #     
-    #     inFile <- input$file1
-    #     if (is.null(inFile)) {
-    #         uploaded_data <- initialdf
-    #     } else {
-    #         req(input$crsprojection)
-    #         
-    #         dkijkt_covid <- read_csv(inFile$datapath)
-    #         # if lat in dd
-    #         if ("X" %in% colnames(dkijkt_covid)) {
-    #             dkijkt_covid_sf <- st_as_sf(dkijkt_covid,
-    #                                         coords = c("X", "Y"),
-    #                                         crs=as.numeric(input$crsprojection))
-    #         } else if ("LAT" %in% colnames(dkijkt_covid)) {
-    #             dkijkt_covid_sf <- st_as_sf(dkijkt_covid,
-    #                                         coords = c("LONG", "LAT"),
-    #                                         crs=4326) %>% 
-    #                 st_transform(crs=as.numeric(input$crsprojection))
-    #         }
-    #     }
-    # })
     
     output$aTable <- DT::renderDataTable({
         if(input$showData){
@@ -706,7 +695,7 @@ server <- function(input, output, session) {
     
     observe({
         updateSelectInput(session, "dependent", label = "Dependent Variable:", choices = names(uploaded_data()))
-        updateCheckboxGroupInput(session, "independent", label = "Independent Variables (Select 2 or more):", choices = names(uploaded_data()))
+        updateCheckboxGroupInput(session, "independent", label = "Independent Variables:", choices = names(uploaded_data()))
     })
     
 }
