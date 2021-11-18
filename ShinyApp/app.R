@@ -39,18 +39,18 @@ ui <- navbarPage("Regressors",
                                     mainPanel(
                                         h2(strong("Project Motivation")),
                                         hr(),
-                                        p("COVID-19 has become an indisputable part of our daily life ever since the virus spread to the majority of the world. Some countries have been able to keep the situation under control, however, there are some that suffered more devastating effects from it. India and Indonesia are 2 countries in Asia that have the highest COVID related mortality and positive rates for COVID-19 cases, especially so in the main capital of the respective countries, likely due to certain underlying common factors within the countries.
+                                        span("COVID-19 has become an indisputable part of our daily life ever since the virus spread to the majority of the world. Some countries have been able to keep the situation under control, however, there are some that suffered more devastating effects from it. India and Indonesia are 2 countries in Asia that have the highest COVID related mortality and positive rates for COVID-19 cases, especially so in the main capital of the respective countries, likely due to certain underlying common factors within the countries.
 
 Researchers claims that Indonesia’s capital, Jakarta, could have as many as 4.7 million people who are possibly infected by the virus in March 2021. This is alarming as this number constitutes to “nearly half” of Jakarta’s population.
                                           
-We realize the importance of using Geographically Weighted Regression (GWR) to investigate the impact independent variables has on  a dependent variable.", style = "font-size:150%"),
+We realize the importance of using ", style = "font-size:150%"), span("Geographically Weighted Regression (GWR)", style = "font-size:150%; font-weight:bold;"), span("to investigate the impact independent variables has on  a dependent variable.", style = "font-size:150%"),
                                         h2(strong("Objective")),
                                         hr(),
                                         p("This application aims to help users to flexibly import their own data and identify the relationship between their selected independent variables, such as proximity to Healthcare facilities and proximity to attraction, and dependent variable, such as Number of positive COVID cases.", style = "font-size:150%"),
                                         h2(strong("App Functions")),
                                         hr(),
                                         tags$ol(
-                                            tags$li(strong("Exploratory Data Analysis (EDA):"), "Visualizing the different variables on Choropleth map and Histogram.", style = "font-size:150%"),
+                                            tags$li(strong("Exploratory Data Analysis (EDA):"), "Visualizing the different variables on Spatial Point map and Histogram.", style = "font-size:150%"),
                                             tags$li(strong("GWR: "),"Build a GWR model based on selected dependent and independent variables, provides analysis on their relationship, thus allowing users to select the best parameters for the GWR base model. Additionally, users are able to visualize the accuracy of the model geographically.", style = "font-size:150%"),
                                             tags$li(strong("GWR Prediction:"),"A GWR prediction model is built based on selected dependent and independent variables with the dataset provided. The output is the predicted values which will be analyzed and visualized geographically on the interactive map.", style = "font-size:150%")
                                         )
@@ -68,14 +68,14 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                              accept = c(".csv")),
                                       textInput(
                                          inputId = "crsprojection",
-                                         label = "CRS:",
-                                          placeholder = "Enter CRS"),
+                                         label = "Coordinate Reference System (CRS)",
+                                          placeholder = "Enter CRS (e.g. Singapore SVY21 = 3414)"),
                                       submitButton("Update CRS"),
                                       h5(),
                                       selectInput(inputId = "allvariables",
                                                   label = "Variable:",
                                                   choices = ""),
-                                      h3("Choropleth Map"),
+                                      h3("Spatial Point Map"),
                                       selectInput(inputId = "classmethod",
                                                   label = "Classification Method:",
                                                   choices = list("Bclust" = "bclust",
@@ -110,9 +110,9 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                   ),
                                   mainPanel(
                                       tabsetPanel(
-                                          tabPanel("Choropleth Map", tmapOutput("choromap"),
+                                          tabPanel("Spatial Point Map", tmapOutput("choromap"),
                                                    HTML("Tips:
-                                                        <br/> The choropleth map plots the selected variable. 
+                                                        <br/> The Spatial Point map plots the selected variable. 
                                                         <br/> If a categorical variable is selected, refer to the legend.
                                                         <br/> For numerical variables, the darker the colour of the spatial point, the higher the value of the variable.
                                                         ")),
@@ -232,8 +232,8 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                           tabPanel("Visualization", tmapOutput("visualizationGwr"),
                                                    HTML("Tips: 
                                                         <br/> This shows the local_R2 value GWR model geographically.
-                                                        <br/> Dark red means a higher local_R2 value and indicates better performance for that region.
-                                                        <br/> Light yellow means a lower local_R2 value and indicates poorer performance for that region.")),
+                                                        <br/> Darker shade means a higher local_R2 value and indicates better performance for that region.
+                                                        <br/> Lighter shade means a lower local_R2 value and indicates poorer performance for that region.")),
                                           tabPanel("Data Table", DT::dataTableOutput("aTableGwr"),
                                                    HTML("Tips: 
                                                         <br/> This shows data of the selected dependent and independent variables."))
@@ -300,8 +300,8 @@ We realize the importance of using Geographically Weighted Regression (GWR) to i
                                           tabPanel("Visualization", tmapOutput("visualization"),
                                                    HTML("Tips: 
                                                         <br/> This shows the predicted value of the dependent variable geographically.
-                                                        <br/> Dark red means a higher predicted value of the dependent variable.
-                                                        <br/> Light yellow means a lower predicted value of the dependent variable.")),
+                                                        <br/> Darker shade means a higher predicted value of the dependent variable.
+                                                        <br/> Light shade means a lower predicted value of the dependent variable.")),
                                           tabPanel("Data Table", DT::dataTableOutput("aTable"),
                                                    HTML("Tips: 
                                                         <br/> This shows data of the selected dependent and independent variables."))
