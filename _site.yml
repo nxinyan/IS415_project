@@ -17,10 +17,17 @@ navbar:
           href: junlong.html
     - text: "Project"
       menu:
-        - text: "About"
-          href: about.html
-        - text: "Project"
-          href: Project.html
+        - text: "Github Repo"
+          href: https://github.com/nxinyan/IS415_project
         - text: "Project Proposal"
           href: ProjectProposal.html
+        - text: "Poster"
+          href: Poster/Poster.pdf
+        - text: "Practice Research Paper"
+          href: ./Research%20Paper/Research_Paper.pdf
+        - text: "User Guide"
+          href: UserGuide.html
+        - text: "ShinyApp"
+          href: https://junlong-toh-2019-is415.shinyapps.io/Regressors/
+
 output: distill::distill_article
