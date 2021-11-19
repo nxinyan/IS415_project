@@ -22,7 +22,7 @@ output: rticles::acm_article
 
 # Motivation of the application
 
-The insufficient amount of GWR applications to collate insights of the various variables effectively and having an user-friendly application to run a wide range of GWR models with different configurations is what drives our research and application developing process. The goal is to provide researchers and the government with an application consisting of all the GWR methods in one.  to calibrate the model with the best parameter found through the analysis of the relationship In more details, it aims to achieve the following requirements:
+The insufficient amount of GWR applications to collate insights of the various variables effectively and having an user-friendly application to run a wide range of GWR models with different configurations is what drives our research and application developing process. The goal is to provide researchers and the government with an application consisting of all the GWR methods in one. To calibrate the model with the best parameter found through the analysis of the relationship In more details, it aims to achieve the following requirements:
 
 - To be able to understand the data by visualizing the individual variables on a spatial point map and histogram.
 
