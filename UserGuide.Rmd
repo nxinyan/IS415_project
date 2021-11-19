@@ -31,19 +31,19 @@ knitr::opts_chunk$set(echo = FALSE)
 * **Data should not be too large (Maximum: 1000 rows)**
 * **Large data should expect a longer loading time**
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/dataImport_1.png")
 ```
 
 1. Click "Browse..."
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/dataImport_2.png")
 ```
 
 2. Select the csv file
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/dataImport_3.png")
 ```
 
@@ -52,7 +52,7 @@ knitr::include_graphics("userGuideImage/dataImport_3.png")
 
 # EDA
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/EDA_1.png")
 ```
 
@@ -65,7 +65,7 @@ knitr::include_graphics("userGuideImage/EDA_1.png")
 
 ## Choropleth Map
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/EDA_2.png")
 ```
 
@@ -75,7 +75,7 @@ In this example, the regions that are closer to attraction places can be seen to
 
 ## Histogram
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/EDA_3.png")
 ```
 
@@ -85,14 +85,14 @@ In this example, PROX_ATTRACTION is slightly right skewed, however, no action is
 
 # GWR
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/GWR_1.png")
 ```
 
 1. Select dependent variable (**Note: The correct dependent variable must be selected if not the system will have error**)
 2. Select 1 or more independent variables to analyze the relationships (**Note: Select only numeric variables, do not select geometry and select at least 2 independent variables if a correlation analysis is desired**)
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/GWR_2.png")
 ```
 
@@ -116,7 +116,7 @@ If there are no changes to model parameters, click “Run” (Step 8)
 
 ## Formula Tab
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/GWR_3.png")
 ```
 
@@ -127,7 +127,7 @@ POSITIF ~ PROX_ATTRACTION + PROX_WORSHIP + PROX_RESTAURANT
 
 ## Correlation Plot Tab
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/GWR_4.png")
 ```
 
@@ -137,7 +137,7 @@ In this example, the correlation plots shows the correlation coefficient between
 
 ## Summary Tab
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/GWR_5.png")
 ```
 
@@ -146,9 +146,19 @@ In the Summary Tab, the statistical summary of the base model is shown. Some of 
 In this example, we can interpret the multicollinearity function to be as such:
 	POSITIF = 1822.98 + 185.89 *  PROX_ATTRACTION + 69.32 * PROX_WORSHIP + 362.23 * PROX_RESTAURANT
 
+The R-squared refers to the percentage that the regression model is able to explain. In this case, the R-squared is 0.1944 and it means that the multiple regression model built is able to explain about 19% of the number of POSITIF COVID-19 cases.
+
+The model p-value tells us if the multiple linear regression model is a good estimator of the dependent variable. P-value lower than the significance level means multiple linear regression model is a good estimator of the dependent variable. P-value higher than the significance level means that the mean is a good estimator of the dependent variable. 
+
+The p-value of the above model is much smaller than 0.05, and hence we will reject the null hypothesis that mean is a good estimator of POSITIF. We can infer that the multiple linear regression model is a good estimator of POSITIF cases.
+
+Coefficients section shows the p-values of the estimates of the Intercept and the independent variables. Variables with p-value less than the significance level (can look at the asterick depending on the significance level determined by the user) means that they are good parameter estimates, which should be kept. On the other hand, variables with p-value above significance level (can look at the asterick depending on the significance level determined by the user) means they are not statistically significant and should be removed from the model. 
+
+The above shows that PROX_ATTRACTION and PROX_RESTAURANT are statistically significant and should be kept.
+
 ## Multicollinearity Tab
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/GWR_6.png")
 ```
 
@@ -158,7 +168,7 @@ Independent variables with VIF more than 10 should be removed because there are 
 
 ## Linearity Tab
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/GWR_7.png")
 ```
 
@@ -168,7 +178,7 @@ In this example, we can see that most of the points are close to the zero line w
 
 ## Normality
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/GWR_8.png")
 ```
 
@@ -178,17 +188,17 @@ In this example, we can see some resemblance of a normal curve, even though the 
 
 ## Base Model’s Performance
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/GWR_9.png")
 ```
 
 In the Base Model’s Performance tab, the statistical summary of the global regression model and the GWR model are provided, as shown below.
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/GWR_10.png")
 ```
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/GWR_11.png")
 ```
 
@@ -197,7 +207,7 @@ Based on the summary given in this example, we can see that the global regressio
 
 ## Visualization
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/GWR_12.png")
 ```
 
@@ -207,7 +217,7 @@ In this example, we can see that there are signs of clustering based on the loca
 
 ## Data Table
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/GWR_13.png")
 ```
 
@@ -215,10 +225,10 @@ The data table tab shows the data of the selected dependent and independent vari
 
 # Prediction
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/prediction_1.png")
 ```
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/prediction_2.png")
 ```
 
@@ -233,7 +243,7 @@ knitr::include_graphics("userGuideImage/prediction_2.png")
 
 ## Formula Tab
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/prediction_3.png")
 ```
 
@@ -244,7 +254,7 @@ POSITIF ~ PROX_ATTRACTION + PROX_WORSHIP + PROX_RESTAURANT + PROX_MALL + PROX_SU
 
 ## Summary Tab
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/prediction_4.png")
 ```
 
@@ -254,20 +264,24 @@ With the estimate of each coefficient we are able to formulate the linear regres
 
 POSITIF = 1861.21 + 242.39(PROX_ATTRACTION) + 36.22(PROX_WORSHIP) + 405.32(PROX_RESTAURANT) + 132.49(PROX_MALL) - 11.06(PROX_SUPERMARKET) - 30.83(PROX_CONVENIENCE) - 183.96(PROX_KINDERGARTENS) + 45.30(PROX_SCHOOL) - 13.63(PROX_TERMINAL) - 236.01(PROX_HEALTHCARE) + 57.90(PROX_RAILWAYS)
 
-The R-squared refers to the percentage that the regression model is able to explain. In this case, the R-squared is 0.2622 and it means that the multiple regression model built is able to explain about 26% of the number of POSITIF COVID-19 cases.
+The R-squared refers to the percentage that the regression model is able to explain. In this case, the R-squared is 0.2296 and it means that the multiple regression model built is able to explain about 23% of the number of POSITIF COVID-19 cases.
 
-The model p-value tells us if the multiple linear regression model is a good estimator of the dependent variable. P-value lower than the significance level means multiple linear regression model is a good estimator of the dependent variable. P-value higher than the significance level means that the mean is a good estimator of the dependent variable. The p-value of the above model is much smaller than 0.05, and hence we will reject the null hypothesis that mean is a good estimator of POSITIF. We can infer that the multiple linear regression model is a good estimator of POSITIF cases.
+The model p-value tells us if the multiple linear regression model is a good estimator of the dependent variable. P-value lower than the significance level means multiple linear regression model is a good estimator of the dependent variable. P-value higher than the significance level means that the mean is a good estimator of the dependent variable. 
 
-Coefficients section shows the p-values of the estimates of the Intercept and the independent variables. Variables with p-value less than the significance level (can look at the asterick depending on the significance level determined by the user) means that they are good parameter estimates, which should be kept. On the other hand, variables with p-value above significance level (can look at the asterick depending on the significance level determined by the user) means they are not statistically significant and should be removed from the model. The above shows that PROX_ATTRACTION, PROX_RESTAURANT, PROX_MALL, PROX_HEALTHCARE and PROX_RAILWAYS are statistically significant and should be kept.
+The p-value of the above model is much smaller than 0.05, and hence we will reject the null hypothesis that mean is a good estimator of POSITIF. We can infer that the multiple linear regression model is a good estimator of POSITIF cases.
+
+Coefficients section shows the p-values of the estimates of the Intercept and the independent variables. Variables with p-value less than the significance level (can look at the asterick depending on the significance level determined by the user) means that they are good parameter estimates, which should be kept. On the other hand, variables with p-value above significance level (can look at the asterick depending on the significance level determined by the user) means they are not statistically significant and should be removed from the model. 
+
+The above shows that PROX_ATTRACTION, PROX_RESTAURANT, PROX_MALL, PROX_HEALTHCARE and PROX_RAILWAYS are statistically significant and should be kept.
 
 
 ## Prediction Model’s Performance Tab
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/prediction_5.png")
 ```
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/prediction_6.png")
 ```
 
@@ -277,7 +291,7 @@ From the example, the min predicted POSITIF COVID-19 case is 1017.2, median pred
 
 ## Visualization Tab
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/prediction_7.png")
 ```
 
@@ -287,7 +301,7 @@ The above example shows the predicted POSITIF COVID-19 cases geographically in J
 
 ## Data Table
 
-```{r echo=FALSE, fig.align='center',out.width='60%'}
+```{r echo=FALSE, fig.align='center',out.width='100%'}
 knitr::include_graphics("userGuideImage/prediction_8.png")
 ```
 
