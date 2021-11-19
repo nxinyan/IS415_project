@@ -264,7 +264,7 @@ With the estimate of each coefficient we are able to formulate the linear regres
 
 POSITIF = 1861.21 + 242.39(PROX_ATTRACTION) + 36.22(PROX_WORSHIP) + 405.32(PROX_RESTAURANT) + 132.49(PROX_MALL) - 11.06(PROX_SUPERMARKET) - 30.83(PROX_CONVENIENCE) - 183.96(PROX_KINDERGARTENS) + 45.30(PROX_SCHOOL) - 13.63(PROX_TERMINAL) - 236.01(PROX_HEALTHCARE) + 57.90(PROX_RAILWAYS)
 
-The R-squared refers to the percentage that the regression model is able to explain. In this case, the R-squared is 0.2622 and it means that the multiple regression model built is able to explain about 26% of the number of POSITIF COVID-19 cases.
+The R-squared refers to the percentage that the regression model is able to explain. In this case, the R-squared is 0.2296 and it means that the multiple regression model built is able to explain about 23% of the number of POSITIF COVID-19 cases.
 
 The model p-value tells us if the multiple linear regression model is a good estimator of the dependent variable. P-value lower than the significance level means multiple linear regression model is a good estimator of the dependent variable. P-value higher than the significance level means that the mean is a good estimator of the dependent variable. 
 
