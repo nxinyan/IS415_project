@@ -30,7 +30,7 @@ This application aims to allow users to import a dataset of their preference and
 
 - [Github](https://github.com/nxinyan/IS415_project)
 - [Project Proposal](ProjectProposal.html)
-- [Poster](Poster/Poster.pdf)
+- [Poster](./Poster/Poster.pdf)
 - [Research Paper](./Research\ Paper/Research_Paper.pdf)
 - [User Guide for ShinyApp](UserGuide.html)
 - [ShinyApp.io](https://junlong-toh-2019-is415.shinyapps.io/Regressors)
