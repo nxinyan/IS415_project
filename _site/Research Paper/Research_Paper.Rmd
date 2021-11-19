@@ -1,5 +1,5 @@
 ---
-title: Practice Research Paper
+title: Practice Research Paper on Geographically Weighted Regression on Jakarta COVID-19 cases (Regressors)
 author:
   - name: Kwek Yi Chen
     email: "yichen.kwek.2019@smu.edu.sg"
@@ -11,58 +11,312 @@ author:
     email: "junlong.toh.2019@smu.edu.sg"
     affiliation: Singapore Management University
 abstract: |
-  COVID-19 has become an indisputable part of our daily life ever since the virus spread to the majority of the world. Some countries have been able to keep the situation under control, however, there are some that suffered more devastating effects from it. India and Indonesia are 2 countries in Asia that have the highest COVID related mortality and positive rates for COVID-19 cases, especially so in the main capital of the respective countries, likely due to certain underlying common factors within the countries. Researchers claims that Indonesia’s capital, Jakarta, could have as many as 4.7 million people who are possibly infected by the virus in March 2021. This is alarming as this number constitutes to “nearly half” of Jakarta’s population. We realize the importance of using Geographically Weighted Regression (GWR) to investigate the impact independent variables has on  a dependent variable.
+  COVID-19 has become an indisputable part of our daily life ever since the virus spread to the majority of the world. Some countries are able to keep the situation under control, while some suffer the devastating effects from it. Among Asia countries, Indonesia has the highest COVID related mortality and positive rates for COVID-19 cases (Worldometers, n.d.), mainly in Jakarta, the main capital. This is likely due to certain underlying common factors within the countries. Researchers claimed that Jakarta could have as many as 4.7 million people who are possibly infected by the virus in March 2021 (Sood, 2021). This is alarming as this number constitutes to “nearly half” of Jakarta’s population. After our group was made aware about the seriousness of this matter, we decided to come up with Regressors, a Geographically Weighted Regression (GWR) application, to investigate the impacts of various variables (independent variable) on the mortality and positive rates (dependent variable).
   
-  This application aims to help users to flexibly import their own data and identify the relationship between their selected independent variables, such as proximity to Healthcare facilities and proximity to attraction, and dependent variable, such as Number of positive COVID cases. Functions includes Exploratory Data Analysis (EDA), GWR, GWR prediction model. EDA visualize the different variables on Choropleth map and Histogram. GWR builds a GWR model based on selected dependent and independent variables, provides analysis on their relationship, thus allowing users to select the best parameters for the GWR base model. Additionally, users are able to visualize the accuracy of the model geographically. GWR prediction model is built based on selected dependent and independent variables with the dataset provided. The output is the predicted values which will be analyzed and visualized geographically on the interactive map.
+  This application aims to allow users to import a dataset of their preference and use it to identify the relationship between the selected independent variables, such as proximity to healthcare facilities and proximity to attraction, and the dependent variable, such as Number of positive COVID cases. Functions include Exploratory Data Analysis (EDA), GWR, GWR prediction model. EDA visualizes the different variables on spatial point map and Histogram. GWR builds a GWR model based on selected dependent and independent variables, provides analysis on their relationship, thus allowing users to select the best parameters for the GWR base model. Additionally, users are able to visualize the accuracy of the model geographically. GWR prediction model is built based on selected dependent and independent variables with the dataset provided. The output is the predicted values which will be analyzed and visualized geographically on the interactive map. 
+
 bibliography: sigproc.bib
 csl: acm-sig-proceedings.csl
 output: rticles::acm_article
 ---
 
+# Motivation of the application
+
+The insufficient amount of GWR applications to collate insights of the various variables effectively and having an user-friendly application to run a wide range of GWR models with different configurations is what drives our research and application developing process. The goal is to provide researchers and the government with an application consisting of all the GWR methods in one.  to calibrate the model with the best parameter found through the analysis of the relationship In more details, it aims to achieve the following requirements:
+
+- To be able to understand the data by visualizing the individual variables on a spatial point map and histogram.
+
+- To calibrate a GWR model to choose a statistically significant independent variable to test the dependent variable.
+
+- Prediction with selected statistically significant independent variables in relation to dependent variables.
+ 
+# Review and critic on past works
+ 
+## Case Study 1: Geographically weighted regression (GWR) analysis on the death incidence by COVID-19 in São Paulo, Brazil
+ 
+### Objective
+ 
+To gain an understanding of how socio-spatial behaviour causes COVID-19 transmission in the most impacted area in Brazil.
+ 
+### Methodology Used
+ 
+* Spearman correlation test
+* Adjusted R2
+* Ordinary least squares (OLS)
+* Spatial error model (SEM)
+* Spatial lag model (SLM)
+* Geographically weighted regression (GWR)
+* Multiscale geographically weighted regression (MGWR)
+ 
+### Learning Point
+ 
+The results showed that GWR model well represented the spatial distribution of COVID-19 cases in São Paulo, successfully highlighting the impact of geospatial factors in GWR model.
+ 
+Additionally, as the study was conducted specifically in São Paulo, our project intends to proceed in a similar fashion by investigating the impact of geographical spatial factors that would affect the positive cases in our GWR model. Our project intend to adopt the study’s use of performance measures such as Adjusted R2, while using OLS for the GWR model.
+ 
+## Case Study 2: Geographically varying relationships of COVID-19 mortality with different factors in India
+ 
+### Objective
+ 
+To understand the relationship geographically for how different driving factors affect COVID-19 deaths.
+ 
+### Methodology Used
+ 
+* Variance Inflation Factor (VIF): to get rid of unnecessary redundancy in explanatory variables.
+* Ordinary least squares (OLS)
+* Geographically weighted regression (GWR)
+ 
+### Learning Point
+ 
+The use of map visualization for the model on the localized level helps to identify possible geographical spatial point patterns, such as clustering. This could indicate possible higher correlations of selected variables in certain regions than other regions. Our project will be using this as an inspiration for plotting the model’s performance across the regions to highlight possible spatial point patterns.
+ 
+# Design framework
+ 
+Regressors are designed to be informative and user friendly without being over cluttered. The three main visualizations include: interactive maps, text outputs and graphs. 
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/DF_1.png")
+```
+Figure 3.1: Tab navigation
+
+In our application, we implemented the use of tabs for easy navigation between the app’s 3 main functions: EDA, GWR and GWR Prediction as seen in Figure 3.1. Followed by sub tabs containing the different analysis for the selected function.
+ 
+## EDA
+ 
+### Spatial Point Map
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/DF_2.png")
+```
+Figure 3.2: Spatial Point Map of variable selected
+
+Figure 3.2 is a spatial point map that shows the selected variables geographically. Sub-districts with a spatial point of darker shades indicate that it has a higher number of positive cases whereas sub-districts with lighter shade spatial point indicate that it has a lower number of positive cases.
+ 
+Users are able to select the variables they want to visualise, and classification method. Classification method options include jenks, equal, pretty, sd, fixed, bclust, fisher, hclust, kmeans and quantile.
+ 
+### Histogram
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/DF_3.png")
+```
+Figure 3.3: Histogram of selected variable
+
+Figure 3.3 shows the distribution of the selected variable. 
+ 
+Users are able to choose the number of bins by adjusting the slider and change the color of the histogram to their preference using the Histogram Fill function.
+ 
+## GWR
+ 
+### Correlation Plot
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/DF_4.png")
+```
+Figure 3.4: Correlation plot of independent variables
+
+Figure 3.4 is a correlation plot that explains the correlation between the independent variables the user has selected. A correlation value of greater than 0.75 is a good indication of high correlation, as such one of the two variables should be removed from the analysis.
+ 
+Users are able to select/deselect the independent variables in the list using the checkbox to see the correlation of the selected independent variables. Users can also choose the correlation order, method and type using the sidebar select option. Correlation order options include “AOE”, “FPC”, “hclust” and “alphabet”. Correlation model options include “circle”, “square”, “ellipse”, “number”, “shade”, “color” and “pie”. Correlation type options include “full”, “upper” and “lower”.
+ 
+### Summary
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/DF_5.png")
+```
+Figure 3.5: Summary statistics of independent variables
+
+Figure 3.5 is a text output that provides key statistical information of the selected independent variables, such as the significance level, adjusted R-square and p-value. Based on the p-value provided for each variable, we are able to determine if the variable is statistically insignificant, thus should be removed from the analysis.
+ 
+Users are able to select/deselect the independent variable(s) in the list using the checkbox. 
+ 
+### Multicollinearity
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/DF_6.png")
+```
+Figure 3.6: Multicollinearity of indpendent variables
+
+Figure 3.6 shows the VIF value of the independent variables, which checks the multicollinearity. An independent variable with VIF value greater than 10 indicates multicollinearity and should be removed from the analysis.
+ 
+Users are able to select/deselect the independent variable(s) in the list using the checkbox to see the VIF value of the selected independent variables.
+
+### Linearity
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/DF_7.png")
+```
+Figure 3.7: Residual plot for linearity assumption
+
+Figure 3.7 checks for the linearity of the residuals of the calibrated model.
+ 
+Users are able to select/deselect the independent variables in the list using the checkbox to see the scatterplot of the residual of the calibrated model.
+ 
+If the points are scattered along the zero line (red), it  shows a clustering distribution, which means the calibrated model is linear.
+ 
+### Normality
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/DF_8.png")
+```
+Figure 3.8: Residual binned distribution for Normality assumption
+
+Figure 3.8 shows the linearity of the residuals of the calibrated model. 
+ 
+Users are able to select/deselect the independent variables in the list using the checkbox to see the histogram of the residual of the calibrated model.
+ 
+### Base Model’s Performance
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/DF_9.png")
+```
+Figure 3.9: Statistical information of base model
+
+Figure 3.9 shows the GWR’s model performance. The adjusted R-square value explains how much the calibrated model is able to explain the dependent variable selected. Even though the current model is only able to explain 41% of the dependent variable, it is still accurate because only significant independent variables were chosen. Other independent variables and other GWR configurations can be considered to calibrate a model with a higher adjusted R-square.
+ 
+Users are able to select/deselect the independent variable(s) in the list using the checkbox. Users can also choose the bandwidth, approach, kernel and distance metric using the sidebar select option. Bandwidth options include “Fixed” and “Adaptive”. Approach options include “Cross Validation (CV)” and “Akaike information Criterion (AIC)”. Kernel options include “”Gaussian, “Exponential”, “Bisquare”, “Tricube”, “Boxcar”. Distance metric options include “Euclidean”, “Great Circle”. This configurations can be applied to the 3.2.7, 3.3.1 and 3.3.2
+ 
+### Visualization
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/DF_10.png")
+```
+Figure 3.10: Map distribution of local R2
+
+Figure 3.10 is a interactive map that shows the distribution of the local R2 score geographically, points with a darker shade indicates higher local R2 value, which then indicates higher explainability of the GWR model for the region, while points with a lighter shade indicates lower local R2 value, which then indicates poorer explainability of the model for the region.
+ 
+ 
+## Prediction
+ 
+### Prediction Model’s Performance
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/DF_11.png")
+```
+Figure 3.11: Statistical information of prediction model
+
+Figure 3.11 shows the prediction model’s performance. Information such as min, max, median are provided to understand statistics of the predicted value. 
+ 
+### Visualization
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/DF_12.png")
+```
+Figure 3.12: Map distribution of predicted values
+
+Figure 3.12 is an interactive map that shows the distribution of the prediction values geographically, points with a darker shade indicates higher predicted value, while points with a lighter shade indicates lower predicted value.
+ 
+# Use case
+ 
+## POSITIF (Positive) COVID-19 cases against independent variables
+
+To analyse the impacts of COVID-19 in Jakarta, the number of positive (POSITIF) cases has been identified as the dependent variable to be analysed with the independent variables. Before building a Geographically Weighted Regression (GWR) model, it is important to explore the variables using Exploratory Data Analysis (EDA). 
 
 
-# Introduction 
-Lorem ipsum dolor sit[@meier2012] amet, consectetur adipiscing[@fenner2012a] elit. Pellentesque rhoncus ut tellus eu tristique. Duis pharetra velit vitae viverra elementum. Nulla metus dui, pulvinar id enim at, pellentesque semper ipsum. Phasellus cursus dignissim ipsum, sed congue orci pretium quis. Maecenas rhoncus leo a cursus euismod. Fusce a erat eu ipsum tristique tempus at sed tortor. Aliquam erat volutpat. Donec at pretium lorem. Donec pretium nunc id nunc bibendum convallis. Phasellus quis enim id massa feugiat egestas hendrerit sollicitudin nibh. Sed blandit eros id tellus porta, eget ullamcorper urna posuere. Pellentesque laoreet lacus nibh, a mattis libero viverra sit amet. Sed vitae diam interdum, pharetra neque sit amet, dictum lectus.
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/UC_1.png")
+```
+Figure 4.1: Spatial Point distribution of positive cases in Jakarta
 
-Donec massa justo, ultricies quis facilisis sed, tristique nec metus. Vestibulum id condimentum diam. Integer semper augue id porttitor ultrices. Cras vulputate felis eu diam porttitor, ac pulvinar nisi imperdiet. Donec eros felis, imperdiet vel malesuada at, varius et quam. Phasellus facilisis non risus eu placerat. Sed ac mollis lorem.
+In Figure 4.1, the interactive spatial point map shows the number of positive cases geographically in each sub-district (kelurahan) of Jakarta. It is observed that there are generally more positive cases around the outer boundary of Jakarta, whereas there are fewer positive cases in the central area of Jakarta. This indicates that the spread of the virus could have came from neighbouring provinces near the boundary of Jakarta which resulted in the high number of positive cases near the outer boundaries in Jakarta. 
 
-# Evaluation
-Nullam semper imperdiet orci, at lacinia est aliquet et. Sed justo nibh, aliquet et velit at, pharetra consequat velit. Nullam nec ligula sagittis, adipiscing nisl sed, varius massa. Mauris quam ante, aliquet a nunc et, faucibus imperdiet libero. Suspendisse odio tortor, bibendum vel semper sit amet, euismod ac ante. Nunc nec dignissim turpis, ac blandit massa. Donec auctor massa ac vestibulum aliquam. Fusce auctor dictum lobortis. Vivamus tortor augue, convallis quis augue sit amet, laoreet tristique quam. Donec id volutpat orci. Suspendisse at mi vel elit accumsan porta ac ut diam. Nulla ut dapibus quam.
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/UC_2.png")
+```
+Figure 4.2: Histogram plot of number of positive cases
 
-Sed est odio, ornare in rutrum et, dapibus in urna. Suspendisse varius massa in ipsum placerat, quis tristique magna consequat. Suspendisse non convallis augue. Quisque fermentum justo et lorem volutpat euismod. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi sagittis interdum justo, eu consequat nisi convallis in. Sed tincidunt risus id lacinia ultrices. Phasellus ac ligula sed mi mattis lacinia ac non felis. Etiam at dui tellus.
+Figure 4.2 shows the distribution of the number of positive cases in Jakarta. Majority of the sub-district has around 2000 to 3000 positive cases. It is shown that there are sub-districts with zero positive cases which is the lowest among all the other sub-districts. The highest number of positive cases found in some sub-districts is above 6000.
+ 
+After exploring the variables with EDA, the GWR model can be built to identify the relationship between the independent variables and the dependent variable, which in this case is the number of positive COVID cases. Before building the GWR model, correlation analysis should be performed to highlight the highly correlated variables.
 
-# Conclusion
-Duis nec purus sed neque porttitor tincidunt vitae quis augue. Donec porttitor aliquam ante, nec convallis nisl ornare eu. Morbi ut purus et justo commodo dignissim et nec nisl. Donec imperdiet tellus dolor, vel dignissim risus venenatis eu. Aliquam tempor imperdiet massa, nec fermentum tellus sollicitudin vulputate. Integer posuere porttitor pharetra. Praesent vehicula elementum diam a suscipit. Morbi viverra velit eget placerat pellentesque. Nunc congue augue non nisi ultrices tempor.
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/UC_3.png")
+```
+Figure 4.3: Correlation plot of proximities
+
+In Figure 4.3, the relationship between the independent variables can be seen. Majority of them are not highly correlated with each other with correlation values lower than 0.75. Therefore, these independent variables may be considered for the model after calibration.
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/UC_4.png")
+```
+Figure 4.4: Highlight of proximities significance level
+
+Figure 4.4 shows the independent variables that are statistically significant at 95% confidence level are PROX_ATTRACTION, PROX_RESTAURANT, PROX_MALL, PROX_HEALTHCARE and PROX_RAILWAYS. 
+These variables have p-value below 0.05. The p-value of the model, 3.237e-14 is less than 0.05 which means the model is a good estimator of the number of positive covid cases in Jakarta. 
+ 
+To improve the accuracy of the model, it is important to choose independent variables that are statistically significant. After a few iterations of calibrating the model, independent variables that are not statistically significant were removed.
+
+```{r echo=FALSE, fig.align='center',out.width='100%',}
+knitr::include_graphics("researchpaperimage/UC_5.png")
+```
+Figure 4.5: VIF values of proximity variables
+
+Figure 4.5 shows the VIF value of the independent variables. The selected independent variables are all below 10, thus no there is no sign of multicollinearity and no further independent variables are needed to be removed.
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/UC_6.png")
+```
+Figure 4.6: Linearity check of variables
+
+Figure 4.6 checks the linearity of the residuals of the calibrated model. The above scatter plot shows that most points centers around the zero line with the exception of a batch of minority that are scattered further away from the line. Thus it is safe to assume model linearity.
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/UC_7.png")
+```
+Figure 4.7: Normality check of variables
+
+Figure 4.7 checks the normality of the residuals of the calibrated model. The above graph shows some resemblance to a normal distribution, thus the model can be assumed to fulfil the normality assumption.
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/UC_8.png")
+```
+Figure 4.8: R-squared value of the Jakarta's base GWR model
+
+Figure 4.8 shows the GWR’s Model  performance. The model has an adjusted R-square value of 0.41 which means that the model is able to explain 41% of the number of positive cases in Jakarta. 
+Even though the current model is only able to explain 41% of the dependent variable, it is still accurate because only significant independent variables were chosen. Other independent variables and other GWR configurations can be considered to calibrate a model with a higher adjusted R-square.
+The formula of the model is:
+
+POSITIF = 237.195 - 8.2455 (PROX_ATTRACTION) - 94.2505 (PROX_RESTAURANT) - 176.9493 (PROX_MALL) - 897.1231 (PROX_HEALTHCARE) - 46.4377 (PROX_RAILWAYS) 
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/UC_9.png")
+```
+Figure 4.9: Map distribution of local R2 in Jakarta
+
+Figure 4.9 shows that North and South-East regions of Jakarta have a higher Local_R2 value as compared to other regions. This indicates that the calibrated model better explains the number of positive cases in these regions, which also means that the independent variables, such as the proximity to attractions, restaurants, malls, healthcare facilities and railways, have a strong relation to the number of positive cases.
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/UC_10.png")
+```
+Figure 4.10: Predicted positive cases base on selected variables
+
+Figure 4.10 shows the GWR prediction with the same variables as the base model. It predicts that there are a minimum of zero positive cases as the min is below zero. The predicted maximum number of positive cases is 5532.4. The median predicted number of positive cases is 2609.
+
+```{r echo=FALSE, fig.align='center',out.width='100%'}
+knitr::include_graphics("researchpaperimage/UC_11.png")
+```
+Figure 4.11: Map distribution of Jakarta's predicted postive cases
+
+Figure 4.11 plots predicted the number of positive cases in Jakarta based on the selected independent variables. Generally, East, South and North-West of Jakarta have higher predicted positive cases as represented by the darker green spatial points. Closer observation can be done on these regions by the governments in order to minimise the spread of positive COVID cases.
+ 
+# Discussion
+
+The audience will be able to learn which independent variables play a more significant role in the spread of COVID-19 in Jakarta. The system allows users to constantly identify variables that are significant and re-calibrate the model iteratively. With the prediction model, it allow users to compare the predicted value with the actual value from EDA to see the accuracy of the model based on selected independent variables. 
+ 
+Overall, significant independent variables identified are proximity to attractions, restaurants, malls, healthcare facilities and railways. The prediction model with the independent variables mentioned shows that the South, East and North-west region of Jakarta have higher predicted positive cases. Closer observation can be done by the government, and if needed, engage the respective stakeholders in order to minimise the spread of the virus.
+
+# Future Work
+
+Firstly, our current application can be considered as comprehensive for users that are using it for research purposes and are aware of the terms used within the analysis and the models. We acknowledge that this could result in a bigger gap in understanding for users that are not as research-focused and use the application mainly for data visualization purposes. Thus, one possible extension beyond our current application’s capabilities would be to separate the tabs into research usage and visualization usage, allowing different users to fulfil their needs more efficiently.
+ 
+Secondly, while our current application allows users to import their own dataset and indicate the respective projection system, we can possibly look into allowing users to import their geospatial layers as well, such that the map visualization can be more zoomed in to the areas of interest.
 
 # References
 
----
-references:
-- id: meier2012
-  title: Professinal Android 4 Application Development
-  author: 
-  - family: Meier
-    given: Reto
-  type: book
-  publisher: John Wiley & Sons, Inc.
-  issued:
-    year: 2012
-    month: 5
-- id: fenner2012a
-  title: One-click science marketing
-  author:
-  - family: Fenner
-    given: Martin
-  container-title: Nature Materials
-  volume: 11
-  URL: 'https://doi.org/10.1038/nmat3283'
-  DOI: 10.1038/nmat3283
-  issue: 4
-  publisher: Nature Publishing Group
-  page: 261-263
-  type: article-journal
-  issued:
-    year: 2012
-    month: 3
-...
++ A.I.Middya, S.Roy (2021, April 12). Geographically varying relationships of COVID-19 mortality with different factors in India. Retrieved October 9, 2021, from https://www.nature.com/articles/s41598-021-86987-5 
+
++ R.C.Urban, L.Y.K.Nakada (2020). GIS-based spatial modelling of COVID-19 death incidence in São Paulo, Brazil. Retrieved October 9, 2021, from https://journals.sagepub.com/doi/pdf/10.1177/0956247820963962 
+
++ Sood, A. S. (2021, July 14). Indonesia Covid-19: Almost half of Jakarta’s population may have caught the virus, survey finds. Retrieved October 9, 2021, from https://edition.cnn.com/2021/07/13/asia/indonesia-antibody-study-covid-intl-hnk-scli/index.html
+
++ Worldometers. (n.d.). COVID Live Update: 237,632,869 Cases and 4,851,284 Deaths from the Coronavirus - Worldometer. Retrieved October 8, 2021, from https://www.worldometers.info/coronavirus/#countries
 
