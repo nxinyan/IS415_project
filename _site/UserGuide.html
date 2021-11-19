@@ -2133,19 +2133,19 @@ Project
 <li><strong>Large data should expect a longer loading time</strong></li>
 </ul>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/dataImport_1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/dataImport_1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <ol type="1">
 <li>Click “Browse…”</li>
 </ol>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/dataImport_2.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/dataImport_2.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <ol start="2" type="1">
 <li>Select the csv file</li>
 </ol>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/dataImport_3.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/dataImport_3.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <ol start="3" type="1">
 <li>Input the CRS of your dataset’s country (Example: SG: 3414, Jakarta: 23845)</li>
@@ -2153,7 +2153,7 @@ Project
 </ol>
 <h1 id="eda">EDA</h1>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/EDA_1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/EDA_1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <ol type="1">
 <li>Select a independent variable or dependent variables to visualise on the choropleth map and histogram</li>
@@ -2165,26 +2165,26 @@ Project
 </ol>
 <h2 id="choropleth-map">Choropleth Map</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/EDA_2.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/EDA_2.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>For numerical variables, the darker the color of a spatial point the higher the value of the selected variable, while the lighter the color of a spatial point indicating lower value of the selected variable.</p>
 <p>In this example, the regions that are closer to attraction places can be seen to be clustered around central Jakarta, while the regions near the border are further away from attraction places</p>
 <h2 id="histogram">Histogram</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/EDA_3.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/EDA_3.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>Histogram is used to see the distribution of the data. The number of bins is to help group the data according to the values. Additionally, histogram is a efficient way to look at the skewness of the data distribution.</p>
 <p>In this example, PROX_ATTRACTION is slightly right skewed, however, no action is required for our application to work.</p>
 <h1 id="gwr">GWR</h1>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/GWR_1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/GWR_1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <ol type="1">
 <li>Select dependent variable (<strong>Note: The correct dependent variable must be selected if not the system will have error</strong>)</li>
 <li>Select 1 or more independent variables to analyze the relationships (<strong>Note: Select only numeric variables, do not select geometry and select at least 2 independent variables if a correlation analysis is desired</strong>)</li>
 </ol>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/GWR_2.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/GWR_2.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p><strong>Note that all parameters for “Correlation Plot” and “Model” have a default value as shown above. Not changing the selection will run the correlation and model analysis based on the selected parameters.</strong></p>
 <h2 id="correlation-plot-step-1-to-3">Correlation Plot (Step 1 to 3)</h2>
@@ -2204,69 +2204,74 @@ Project
 </ol>
 <h2 id="formula-tab">Formula Tab</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/GWR_3.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/GWR_3.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>The formula tab shows the Multiple Linear Regression Formula based on the dependent and independent variables selected.</p>
 <p>In this example, The formula is: POSITIF ~ PROX_ATTRACTION + PROX_WORSHIP + PROX_RESTAURANT</p>
 <h2 id="correlation-plot-tab">Correlation Plot Tab</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/GWR_4.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/GWR_4.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>In this tab, the correlation between selected dependent variables are shown with the diagonal always equating to 1 as a variable will always be correlated with itself. From the graph, the darker the colors are, the more the variables are correlated regardless of whether it is positive or negative.</p>
 <p>In this example, the correlation plots shows the correlation coefficient between the 3 variables, PROX_ATTRACTION, PROX_WORSHIP, PROX_RESTAURANT. PROX_ATTRACTION can be inferred to be more correlated to PROX_RESTAURANT than with PROX_WORSHIP.</p>
 <h2 id="summary-tab">Summary Tab</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/GWR_5.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/GWR_5.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>In the Summary Tab, the statistical summary of the base model is shown. Some of which includes: Min, Median, Max, Statistical significance of variables in the model, the R-square value of the model. Based on the calculated p-value of each selected dependent variable, users can decide which variables to keep in the model.</p>
 <p>In this example, we can interpret the multicollinearity function to be as such: POSITIF = 1822.98 + 185.89 * PROX_ATTRACTION + 69.32 * PROX_WORSHIP + 362.23 * PROX_RESTAURANT</p>
+<p>The R-squared refers to the percentage that the regression model is able to explain. In this case, the R-squared is 0.1944 and it means that the multiple regression model built is able to explain about 19% of the number of POSITIF COVID-19 cases.</p>
+<p>The model p-value tells us if the multiple linear regression model is a good estimator of the dependent variable. P-value lower than the significance level means multiple linear regression model is a good estimator of the dependent variable. P-value higher than the significance level means that the mean is a good estimator of the dependent variable.</p>
+<p>The p-value of the above model is much smaller than 0.05, and hence we will reject the null hypothesis that mean is a good estimator of POSITIF. We can infer that the multiple linear regression model is a good estimator of POSITIF cases.</p>
+<p>Coefficients section shows the p-values of the estimates of the Intercept and the independent variables. Variables with p-value less than the significance level (can look at the asterick depending on the significance level determined by the user) means that they are good parameter estimates, which should be kept. On the other hand, variables with p-value above significance level (can look at the asterick depending on the significance level determined by the user) means they are not statistically significant and should be removed from the model.</p>
+<p>The above shows that PROX_ATTRACTION and PROX_RESTAURANT are statistically significant and should be kept.</p>
 <h2 id="multicollinearity-tab">Multicollinearity Tab</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/GWR_6.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/GWR_6.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>The multicollinearity tab shows the VIF value of each independent variable</p>
 <p>Independent variables with VIF more than 10 should be removed because there are signs of multicollinearity. In the example above, there is no sign of multicollinearity among the independent variables.</p>
 <h2 id="linearity-tab">Linearity Tab</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/GWR_7.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/GWR_7.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>The Linearity tab shows a plot of the model’s scaled residual centering around a zero line. A scatter plot clustering near the zero line indicates close approximation to linearity function.</p>
 <p>In this example, we can see that most of the points are close to the zero line with a minority scattering across the lower and upper extremes of the graph, the model can therefore be considered to be approximately linear.</p>
 <h2 id="normality">Normality</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/GWR_8.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/GWR_8.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>The Normality tab shows the distribution of the model’s residual. It is desired to have the curve to closely resemble a normal curve as an indication for normality approximation.</p>
 <p>In this example, we can see some resemblance of a normal curve, even though the curve is considered flat. This means that the model fulfils the normality assumption.</p>
 <h2 id="base-models-performance">Base Model’s Performance</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/GWR_9.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/GWR_9.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>In the Base Model’s Performance tab, the statistical summary of the global regression model and the GWR model are provided, as shown below.</p>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/GWR_10.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/GWR_10.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/GWR_11.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/GWR_11.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>Based on the summary given in this example, we can see that the global regression model’s R-squared value is extremely low as compared to that of the GWR model. As R-squared value indicates how much of the data can be explained by the model, it may be worth considering to include more variables for better explainability of the model.</p>
 <h2 id="visualization">Visualization</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/GWR_12.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/GWR_12.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>In this Visualization tab, the distribution of the local_R2 score is shown geographically, with darker shades indicating higher local_R2, thus better explainability of the model, while lighter shades indicate poorer explainability.</p>
 <p>In this example, we can see that there are signs of clustering based on the local R-squared values, this may indicate that in certain areas, the dependent variable tend to have stronger relations to the selected independent variable</p>
 <h2 id="data-table">Data Table</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/GWR_13.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/GWR_13.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>The data table tab shows the data of the selected dependent and independent variables.</p>
 <h1 id="prediction">Prediction</h1>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/prediction_1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/prediction_1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/prediction_2.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/prediction_2.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <ol type="1">
 <li>Select Dependent Variable (<strong>Note: The correct dependent variable must be selected if not the system will have error</strong>)</li>
@@ -2280,38 +2285,40 @@ Project
 </ol>
 <h2 id="formula-tab-1">Formula Tab</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/prediction_3.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/prediction_3.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>The formula tab shows the Multiple Linear Regression Formula based on the dependent and independent variables input.</p>
 <p>In this example, The formula is: POSITIF ~ PROX_ATTRACTION + PROX_WORSHIP + PROX_RESTAURANT + PROX_MALL + PROX_SUPERMARKET + PROX_CONVENIENCE + PROX_KINDERGARTENS + PROX_SCHOOL + PROX_TERMINAL + PROX_HEALTHCARE + PROX_RAILWAYS</p>
 <h2 id="summary-tab-1">Summary Tab</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/prediction_4.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/prediction_4.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>The summary tab shows the summary of the linear regression model of the formula.</p>
 <p>With the estimate of each coefficient we are able to formulate the linear regression formula. The summary shows that the number of POSITIF COVID-19 cases can be explained by using the formula:</p>
 <p>POSITIF = 1861.21 + 242.39(PROX_ATTRACTION) + 36.22(PROX_WORSHIP) + 405.32(PROX_RESTAURANT) + 132.49(PROX_MALL) - 11.06(PROX_SUPERMARKET) - 30.83(PROX_CONVENIENCE) - 183.96(PROX_KINDERGARTENS) + 45.30(PROX_SCHOOL) - 13.63(PROX_TERMINAL) - 236.01(PROX_HEALTHCARE) + 57.90(PROX_RAILWAYS)</p>
 <p>The R-squared refers to the percentage that the regression model is able to explain. In this case, the R-squared is 0.2622 and it means that the multiple regression model built is able to explain about 26% of the number of POSITIF COVID-19 cases.</p>
-<p>The model p-value tells us if the multiple linear regression model is a good estimator of the dependent variable. P-value lower than the significance level means multiple linear regression model is a good estimator of the dependent variable. P-value higher than the significance level means that the mean is a good estimator of the dependent variable. The p-value of the above model is much smaller than 0.05, and hence we will reject the null hypothesis that mean is a good estimator of POSITIF. We can infer that the multiple linear regression model is a good estimator of POSITIF cases.</p>
-<p>Coefficients section shows the p-values of the estimates of the Intercept and the independent variables. Variables with p-value less than the significance level (can look at the asterick depending on the significance level determined by the user) means that they are good parameter estimates, which should be kept. On the other hand, variables with p-value above significance level (can look at the asterick depending on the significance level determined by the user) means they are not statistically significant and should be removed from the model. The above shows that PROX_ATTRACTION, PROX_RESTAURANT, PROX_MALL, PROX_HEALTHCARE and PROX_RAILWAYS are statistically significant and should be kept.</p>
+<p>The model p-value tells us if the multiple linear regression model is a good estimator of the dependent variable. P-value lower than the significance level means multiple linear regression model is a good estimator of the dependent variable. P-value higher than the significance level means that the mean is a good estimator of the dependent variable.</p>
+<p>The p-value of the above model is much smaller than 0.05, and hence we will reject the null hypothesis that mean is a good estimator of POSITIF. We can infer that the multiple linear regression model is a good estimator of POSITIF cases.</p>
+<p>Coefficients section shows the p-values of the estimates of the Intercept and the independent variables. Variables with p-value less than the significance level (can look at the asterick depending on the significance level determined by the user) means that they are good parameter estimates, which should be kept. On the other hand, variables with p-value above significance level (can look at the asterick depending on the significance level determined by the user) means they are not statistically significant and should be removed from the model.</p>
+<p>The above shows that PROX_ATTRACTION, PROX_RESTAURANT, PROX_MALL, PROX_HEALTHCARE and PROX_RAILWAYS are statistically significant and should be kept.</p>
 <h2 id="prediction-models-performance-tab">Prediction Model’s Performance Tab</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/prediction_5.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/prediction_5.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/prediction_6.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/prediction_6.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>The prediction tab shows the result of GW prediction with the model. It shows the min, median and max of the predicted values.</p>
 <p>From the example, the min predicted POSITIF COVID-19 case is 1017.2, median predicted POSITIF COVID-19 case is 2602.7, and max predicted POSITIF COVID-19 case is 6208.4.</p>
 <h2 id="visualization-tab">Visualization Tab</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/prediction_7.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/prediction_7.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>The visualization tab shows an interactive map of the predicted value geographically. Darker shade dot means a high prediction value while lighter shade dot means a low prediction value.</p>
 <p>The above example shows the predicted POSITIF COVID-19 cases geographically in Jakarta. Region with darker shade dot means a high number of predicted POSITIF COVID-19 cases while region with lighter shade dot means a low number of predicted POSITIF COVID-19 cases.</p>
 <h2 id="data-table-1">Data Table</h2>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="userGuideImage/prediction_8.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="userGuideImage/prediction_8.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>The data table tab shows the data of the selected dependent and independent variables.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
